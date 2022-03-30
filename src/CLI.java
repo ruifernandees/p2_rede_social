@@ -17,9 +17,11 @@ public class CLI {
     public void options() {
         this.reader = new Scanner(System.in);
         System.out.println("=== IFACE ===");
+        Boolean exitCLI = false;
         if (this.user == null) {
             System.out.println("[1] Entrar");
             System.out.println("[2] Cadastrar");
+            System.out.println("[100] Sair do IFace");
             System.out.print("=> ");
             int option = this.reader.nextInt();
             switch (option) {
@@ -28,6 +30,9 @@ public class CLI {
                     break;
                 case 2:
                     this.signUp();
+                    break;
+                case 100:
+                    exitCLI = true;
                     break;
                 default:
                     break;
@@ -38,8 +43,9 @@ public class CLI {
             System.out.println("[3] Abrir feed");
             System.out.println("[4] Enviar mensagem no feed");
             System.out.println("[5] Todos usuários da rede");
-            System.out.println("[6] Sair");
+            System.out.println("[6] Encerrar sessão");
             System.out.println("[7] Remover a conta");
+            System.out.println("[100] Sair do IFace");
             System.out.print("=> ");
             int option = this.reader.nextInt();
             switch (option) {
@@ -64,11 +70,16 @@ public class CLI {
                 case 7:
                     this.removeUser();
                     break;
+                case 100:
+                    exitCLI = true;
+                    break;
                 default:
                     break;
             }
         }
-        this.options();
+        if (!exitCLI) {
+            this.options();
+        }
     }
 
     public void login() {
@@ -142,6 +153,7 @@ public class CLI {
         this.db.users.remove(currentUserIndex);
         this.user = null;
         this.currentUserIndex = -1;
+        this.feed.messages.removeIf(message -> message.username.equals(username));
         System.out.println("Sua conta foi removida do IFace, " + username + ".");
     }
 
