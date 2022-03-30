@@ -15,6 +15,7 @@ public class CLI {
     }
 
     public void options() {
+        this.reader = new Scanner(System.in);
         System.out.println("=== IFACE ===");
         if (this.user == null) {
             System.out.println("[1] Entrar");
@@ -35,8 +36,9 @@ public class CLI {
             System.out.println("[1] Editar Perfil");
             System.out.println("[2] Mostrar Perfil");
             System.out.println("[3] Abrir feed");
-            System.out.println("[4] Todos usuários da rede");
-            System.out.println("[5] Remover a conta");
+            System.out.println("[4] Enviar mensagem no feed");
+            System.out.println("[5] Todos usuários da rede");
+            System.out.println("[6] Remover a conta");
             System.out.print("=> ");
             int option = this.reader.nextInt();
             switch (option) {
@@ -50,9 +52,12 @@ public class CLI {
                     this.feed.show();
                     break;
                 case 4:
-                    this.db.showAllUsers();
+                    this.sendMessageToFeed();
                     break;
                 case 5:
+                    this.db.showAllUsers();
+                    break;
+                case 6:
                     this.removeUser();
                     break;
                 default:
@@ -134,5 +139,13 @@ public class CLI {
         this.user = null;
         this.currentUserIndex = -1;
         System.out.println("Sua conta foi removida do IFace, " + username + ".");
+    }
+
+    public void sendMessageToFeed() {
+        this.reader.nextLine();
+        System.out.println("Nova mensagem: ");
+        String message = this.reader.nextLine();
+        System.out.println(message);
+        this.feed.addMessage(new Message(message, this.user.username));
     }
 }
