@@ -167,6 +167,8 @@ public class CLI {
 
     public void logout() {
         System.out.println("Até mais, " + this.user.username + "!");
+        this.db.users.get(currentUserIndex).setLogged(false);
+        this.currentUserIndex = -1;
         this.user = null;
     }
 }
