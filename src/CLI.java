@@ -6,10 +6,12 @@ public class CLI {
     private UserDB db;
     private User user;
     private int currentUserIndex;
+    private Feed feed;
 
     public CLI() {
         this.reader = new Scanner(System.in);
         this.db = new UserDB();
+        this.feed = new Feed();
     }
 
     public void options() {
@@ -32,8 +34,9 @@ public class CLI {
         } else {
             System.out.println("[1] Editar Perfil");
             System.out.println("[2] Mostrar Perfil");
-            System.out.println("[3] Todos usuários da rede");
-            System.out.println("[4] Remover a conta");
+            System.out.println("[3] Abrir feed");
+            System.out.println("[4] Todos usuários da rede");
+            System.out.println("[5] Remover a conta");
             System.out.print("=> ");
             int option = this.reader.nextInt();
             switch (option) {
@@ -44,9 +47,12 @@ public class CLI {
                     this.viewProfile();
                     break;
                 case 3:
-                    this.db.showAllUsers();
+                    this.feed.show();
                     break;
                 case 4:
+                    this.db.showAllUsers();
+                    break;
+                case 5:
                     this.removeUser();
                     break;
                 default:
