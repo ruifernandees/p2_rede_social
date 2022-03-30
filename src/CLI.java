@@ -3,10 +3,13 @@ import java.util.Scanner;
 public class CLI {
 
     private Scanner reader;
+    private UserDB db;
     private User user;
+    private int currentUserIndex;
 
     public CLI() {
         this.reader = new Scanner(System.in);
+        this.db = new UserDB();
     }
 
     public void options() {
@@ -29,6 +32,9 @@ public class CLI {
         } else {
             System.out.println("[1] Editar Perfil");
             System.out.println("[2] Mostrar Perfil");
+            System.out.println("[3] Todos usuários da rede");
+            System.out.println("[4] Remover a conta");
+            System.out.print("=> ");
             int option = this.reader.nextInt();
             switch (option) {
                 case 1:
@@ -36,6 +42,12 @@ public class CLI {
                     break;
                 case 2:
                     this.viewProfile();
+                    break;
+                case 3:
+                    this.db.showAllUsers();
+                    break;
+                case 4:
+                    this.removeUser();
                     break;
                 default:
                     break;
@@ -49,9 +61,23 @@ public class CLI {
         String login = reader.next();
         System.out.print("Informe a senha: ");
         String pwd = reader.next();
-        if (this.user != null) {
-            if (this.user.pwd.equals(pwd)) {
+        User userToLogin = null;
+        int currentUserIndex = -1;
+        for (int i = 0; i < this.db.users.size(); i++) {
+            User currentUser = this.db.users.get(i);
+            if (currentUser.login.equals(login)) {
+                userToLogin = currentUser;
+                currentUserIndex = i;
+                break;
+            }
+        }
+        if (userToLogin != null) {
+            if (userToLogin.pwd.equals(pwd)) {
+                this.user = userToLogin;
                 this.user.setLogged(true);
+                this.currentUserIndex = currentUserIndex;
+            } else {
+                System.out.println("Senha inválida!");
             }
         } else {
             System.out.println("Crie uma conta para poder logar!");
@@ -67,6 +93,7 @@ public class CLI {
         String pwd = reader.next();
         this.user = new User(username, login, pwd);
         this.viewProfile();
+        this.db.addUser(user);
         return user;
     }  
 
@@ -93,5 +120,13 @@ public class CLI {
         }
         System.out.println("Dados atualizados com sucesso!");
         return this.user;
+    }
+
+    public void removeUser() {
+        String username = this.user.username;
+        this.db.users.remove(currentUserIndex);
+        this.user = null;
+        this.currentUserIndex = -1;
+        System.out.println("Sua conta foi removida do IFace, " + username + ".");
     }
 }

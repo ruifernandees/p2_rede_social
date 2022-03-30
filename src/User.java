@@ -12,9 +12,11 @@ public class User {
 
     @Override
     public String toString() {
-        String result = "==== " + this.username + " ====";
+        String result = "=> " + this.username;
         result += "\nLogin: " + this.login;
-        result += "\nPassword: " + this.pwd;
+        if (this.logged) {
+            result += "\nSua senha: " + this.pwd;
+        }
         return result;
     }
 
