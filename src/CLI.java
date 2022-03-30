@@ -38,7 +38,8 @@ public class CLI {
             System.out.println("[3] Abrir feed");
             System.out.println("[4] Enviar mensagem no feed");
             System.out.println("[5] Todos usuários da rede");
-            System.out.println("[6] Remover a conta");
+            System.out.println("[6] Sair");
+            System.out.println("[7] Remover a conta");
             System.out.print("=> ");
             int option = this.reader.nextInt();
             switch (option) {
@@ -58,6 +59,9 @@ public class CLI {
                     this.db.showAllUsers();
                     break;
                 case 6:
+                    this.logout();
+                    break;
+                case 7:
                     this.removeUser();
                     break;
                 default:
@@ -147,5 +151,10 @@ public class CLI {
         String message = this.reader.nextLine();
         System.out.println(message);
         this.feed.addMessage(new Message(message, this.user.username));
+    }
+
+    public void logout() {
+        System.out.println("Até mais, " + this.user.username + "!");
+        this.user = null;
     }
 }
