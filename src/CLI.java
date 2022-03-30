@@ -20,9 +20,6 @@ public class CLI {
         System.out.println("=== IFACE ===");
         Boolean exitCLI = false;
         if (this.user == null) {
-            for (int i = 0; i < this.db.users.size(); i++) {
-                System.out.println(this.db.users.get(i) +": "+ this.db.users.get(i).requestingYourFriendshipIndexes);
-            }
             System.out.println("[1] Entrar");
             System.out.println("[2] Cadastrar");
             System.out.println("[100] Sair do IFace");
@@ -193,6 +190,7 @@ public class CLI {
             User currentUser = this.db.users.get(i);
             if (i == this.currentUserIndex) continue;
             if (this.user.friendsIndexes.contains(i)) continue;
+            if (this.db.users.get(i).requestingYourFriendshipIndexes.contains(this.currentUserIndex)) continue;
             System.out.println(i + ". " + currentUser.username + ". Adicionar [S/N]");
             String response = this.reader.next();
             if (response.equals("S")) {
@@ -218,7 +216,6 @@ public class CLI {
         }
         ArrayList<Integer> addedUsersIndexes = new ArrayList<Integer>();
         for (int i = 0; i < amountOfRequests; i++) {
-            System.out.println("Begin");
             System.out.println(this.user.requestingYourFriendshipIndexes);
             Integer currentUserLoopIndex = this.user.requestingYourFriendshipIndexes.get(i);
             System.out.println(currentUserLoopIndex);
@@ -231,12 +228,9 @@ public class CLI {
                 this.db.users.get(currentUserLoopIndex).friendsIndexes.add(this.currentUserIndex);
                 System.out.println(currentUser.username + " adicionado!");
                 addedUsersIndexes.add(i);
-                System.out.println("Added indexes: " + addedUsersIndexes);
-
             } else if (response.equals("N")) {
                 System.out.println(currentUser.username + " não adicionado!");
             }
-            System.out.println("end");
         }
         
         for (int j = 0; j < addedUsersIndexes.size(); j++) {
