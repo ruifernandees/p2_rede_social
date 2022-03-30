@@ -5,9 +5,9 @@ public class UserDB {
 
     public UserDB() {
         this.users = new ArrayList<User>();
-        this.users.add(new User("João", "joao", "joao123"));
-        this.users.add(new User("Maria", "maria", "maria123"));
-        this.users.add(new User("José", "jose", "jose123"));
+        this.users.add(new User("João", "joao", "joao123", new ArrayList<Integer>(), new ArrayList<Integer>()));
+        this.users.add(new User("Maria", "maria", "maria123", new ArrayList<Integer>(), new ArrayList<Integer>()));
+        this.users.add(new User("José", "jose", "jose123", new ArrayList<Integer>(), new ArrayList<Integer>()));
     }
 
     public void showAllUsers() {

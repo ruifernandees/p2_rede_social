@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class CLI {
@@ -19,6 +20,9 @@ public class CLI {
         System.out.println("=== IFACE ===");
         Boolean exitCLI = false;
         if (this.user == null) {
+            for (int i = 0; i < this.db.users.size(); i++) {
+                System.out.println(this.db.users.get(i) +": "+ this.db.users.get(i).requestingYourFriendshipIndexes);
+            }
             System.out.println("[1] Entrar");
             System.out.println("[2] Cadastrar");
             System.out.println("[100] Sair do IFace");
@@ -43,8 +47,11 @@ public class CLI {
             System.out.println("[3] Abrir feed");
             System.out.println("[4] Enviar mensagem no feed");
             System.out.println("[5] Todos usuários da rede");
-            System.out.println("[6] Encerrar sessão");
-            System.out.println("[7] Remover a conta");
+            System.out.println("[6] Enviar solicitação de amizade (interativo)");
+            System.out.println("[7] Ver solicitações de amizade (interativo)");
+            System.out.println("[8] Ver amigos");
+            System.out.println("[9] Encerrar sessão");
+            System.out.println("[10] Remover a conta");
             System.out.println("[100] Sair do IFace");
             System.out.print("=> ");
             int option = this.reader.nextInt();
@@ -65,9 +72,18 @@ public class CLI {
                     this.db.showAllUsers();
                     break;
                 case 6:
-                    this.logout();
+                    this.sendFriendRequest();
                     break;
                 case 7:
+                    this.showFriendsRequests();
+                    break;
+                case 8:
+                    this.showFriends();
+                    break;
+                case 9:
+                    this.logout();
+                    break;
+                case 10:
                     this.removeUser();
                     break;
                 case 100:
@@ -117,7 +133,7 @@ public class CLI {
         String login = reader.next();
         System.out.print("Informe a senha: ");
         String pwd = reader.next();
-        this.user = new User(username, login, pwd);
+        this.user = new User(username, login, pwd, new ArrayList<Integer>(), new ArrayList<Integer>());
         this.viewProfile();
         this.db.addUser(user);
         return user;
@@ -170,5 +186,70 @@ public class CLI {
         this.db.users.get(currentUserIndex).setLogged(false);
         this.currentUserIndex = -1;
         this.user = null;
+    }
+
+    public void sendFriendRequest() {
+        for (int i = 0; i < this.db.users.size(); i++) {
+            User currentUser = this.db.users.get(i);
+            if (i == this.currentUserIndex) continue;
+            if (this.user.friendsIndexes.contains(i)) continue;
+            System.out.println(i + ". " + currentUser.username + ". Adicionar [S/N]");
+            String response = this.reader.next();
+            if (response.equals("S")) {
+                if (this.user.requestingYourFriendshipIndexes.contains(i)) {
+                    this.user.friendsIndexes.add(i);
+                    this.db.users.get(i).friendsIndexes.add(this.currentUserIndex);
+                    System.out.println(currentUser.username + " adicionado, pois ele já havia requisitado a você!");
+                    Integer indexC = i;
+                    this.user.requestingYourFriendshipIndexes.removeIf(index -> index == indexC);
+                    continue;
+                }
+                this.db.users.get(i).requestingYourFriendshipIndexes.add(this.currentUserIndex);
+                System.out.println("Pedido feito a " + currentUser.username + " com sucesso!");
+            }
+        }
+    }
+
+    public void showFriendsRequests() {
+        int amountOfRequests = this.user.requestingYourFriendshipIndexes.size();
+        if (amountOfRequests == 0) {
+            System.out.println("\nNão há solicitações de amizade no momento!\n");
+            return;
+        }
+        ArrayList<Integer> addedUsersIndexes = new ArrayList<Integer>();
+        for (int i = 0; i < amountOfRequests; i++) {
+            System.out.println("Begin");
+            System.out.println(this.user.requestingYourFriendshipIndexes);
+            Integer currentUserLoopIndex = this.user.requestingYourFriendshipIndexes.get(i);
+            System.out.println(currentUserLoopIndex);
+            User currentUser = this.db.users.get(currentUserLoopIndex);
+            System.out.println(currentUser);
+            System.out.println(i + ". " + currentUser.username + ". Aceitar? [S/N]");
+            String response = this.reader.next();
+            if (response.equals("S")) {
+                this.user.friendsIndexes.add(currentUserLoopIndex);
+                this.db.users.get(currentUserLoopIndex).friendsIndexes.add(this.currentUserIndex);
+                System.out.println(currentUser.username + " adicionado!");
+                addedUsersIndexes.add(i);
+                System.out.println("Added indexes: " + addedUsersIndexes);
+
+            } else if (response.equals("N")) {
+                System.out.println(currentUser.username + " não adicionado!");
+            }
+            System.out.println("end");
+        }
+        
+        for (int j = 0; j < addedUsersIndexes.size(); j++) {
+            this.db.users.get(this.currentUserIndex).requestingYourFriendshipIndexes.remove(0);
+        }
+        System.out.println(this.db.users.get(this.currentUserIndex).requestingYourFriendshipIndexes);
+    }
+
+    public void showFriends() {
+        System.out.println("\n=== Amigos ===");
+        for (int i = 0; i < this.user.friendsIndexes.size(); i++) {
+            Integer currentLoopIndex = this.user.friendsIndexes.get(i);
+            System.out.println(this.db.users.get(currentLoopIndex));
+        }
     }
 }
