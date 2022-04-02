@@ -12,9 +12,8 @@ public class Feed {
     }
 
     public void show() {
-        System.out.println("\n=== FEED ===");
         if (this.messages.size() == 0) {
-            System.out.println("Feed vazio!\n");
+            System.out.println("Sem conteúdo!\n");
             return;
         }
         for (int i = 0; i < this.messages.size(); i++) {

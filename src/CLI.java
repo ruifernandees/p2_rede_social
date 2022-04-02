@@ -8,11 +8,15 @@ public class CLI {
     private User user;
     private int currentUserIndex;
     private Feed feed;
+    private ArrayList<Community> communities;
 
     public CLI() {
         this.reader = new Scanner(System.in);
         this.db = new UserDB();
         this.feed = new Feed();
+        this.communities = new ArrayList<Community>();
+        this.communities.add(new Community("José", "Comunidade do bairro", "Uma descrição"));
+        this.communities.add(new Community("João", "Os gamers", "Outra descrição"));
     }
 
     public void options() {
@@ -49,6 +53,8 @@ public class CLI {
             System.out.println("[8] Ver amigos");
             System.out.println("[9] Ver inbox");
             System.out.println("[10] Enviar mensagem para alguém");
+            System.out.println("[11] Comunidades");
+            System.out.println("[12] Criar comunidade");
             System.out.println("[100] Encerrar sessão");
             System.out.println("[101] Sair do IFace");
             System.out.println("[102] Remover a conta");
@@ -62,6 +68,7 @@ public class CLI {
                     this.viewProfile();
                     break;
                 case 3:
+                    System.out.println("=== Feed ===");
                     this.feed.show();
                     break;
                 case 4:
@@ -84,6 +91,12 @@ public class CLI {
                     break;
                 case 10:
                     this.sendMessageToInbox();
+                    break;
+                case 11:
+                    this.showCommunity();
+                    break;
+                case 12:
+                    this.createCommunity();
                     break;
                 case 100:
                     this.logout();
@@ -184,6 +197,44 @@ public class CLI {
         String message = this.reader.nextLine();
         System.out.println(message);
         this.feed.addMessage(new Message(message, this.user.username));
+    }
+
+    public void createCommunity() {
+        this.reader.nextLine();
+        System.out.println("Nome da comunidade: ");
+        String name = this.reader.nextLine();
+        System.out.println("Descrição da comunidade: ");
+        String description = this.reader.nextLine();
+        this.communities.add(new Community(this.user.username, name, description));
+        System.out.println("Comunidade criada com sucesso!");
+    }
+
+    public void showCommunity() {
+        this.showAllCommunities();
+        System.out.println("Informe o número da comunidade: ");
+        Integer number = this.reader.nextInt() - 1;
+        if (number < 0 || number >= this.communities.size()) {
+            System.out.println("Comunidade inválida!");
+            return;
+        }
+        this.communities.get(number).show();
+        this.reader.nextLine();
+        System.out.println("Nova mensagem: [N, para sair] ");
+        String message = this.reader.nextLine();
+        if (message.equals("N")) {
+            return;
+        }
+        System.out.println(message);
+        this.communities.get(number).content.addMessage(new Message(message, this.user.username));
+    }
+
+    public void showAllCommunities() {
+        System.out.println("==== COMUNIDADES ====");
+        for (int i = 0; i < this.communities.size(); i++) {
+            Community community = this.communities.get(i);
+            System.out.println("[" + (i + 1) + "]" + community.name);
+            System.out.println("  => " + community.description);
+        }
     }
 
     public void logout() {
