@@ -6,6 +6,7 @@ public class User {
     public String pwd;
     public ArrayList<Integer> friendsIndexes;
     public ArrayList<Integer> requestingYourFriendshipIndexes;
+    public Inbox inbox;
     private Boolean logged = false;
 
     public User(
@@ -20,6 +21,7 @@ public class User {
         this.pwd = pwd;   
         this.friendsIndexes = friendsIndexes;
         this.requestingYourFriendshipIndexes = requestingYourFriendshipIndexes;
+        this.inbox = new Inbox(this.username);
     }   
 
     @Override
@@ -38,5 +40,13 @@ public class User {
 
     public void setLogged(Boolean logged) {
         this.logged = logged;
+    }
+
+    public void showInbox() {
+        this.inbox.showAllMessages();
+    }
+
+    public void addMessageToInbox(Message message, String to) {
+        this.inbox.addMessage(message, to);
     }
 }

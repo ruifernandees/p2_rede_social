@@ -11,4 +11,13 @@ public class Message {
     public String toString() {
         return "\n" + this.username + ": " + this.content;
     }
+
+    public void show(String ownerUsername) {
+        String sender = this.username;
+        if (sender.equals(ownerUsername)) {
+            sender = "Você";
+        }
+        System.out.println(sender + ": " + this.content);
+        
+    }
 }

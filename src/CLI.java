@@ -22,7 +22,7 @@ public class CLI {
         if (this.user == null) {
             System.out.println("[1] Entrar");
             System.out.println("[2] Cadastrar");
-            System.out.println("[100] Sair do IFace");
+            System.out.println("[101] Sair do IFace");
             System.out.print("=> ");
             int option = this.reader.nextInt();
             switch (option) {
@@ -32,7 +32,7 @@ public class CLI {
                 case 2:
                     this.signUp();
                     break;
-                case 100:
+                case 101:
                     exitCLI = true;
                     break;
                 default:
@@ -47,9 +47,11 @@ public class CLI {
             System.out.println("[6] Enviar solicitação de amizade (interativo)");
             System.out.println("[7] Ver solicitações de amizade (interativo)");
             System.out.println("[8] Ver amigos");
-            System.out.println("[9] Encerrar sessão");
-            System.out.println("[10] Remover a conta");
-            System.out.println("[100] Sair do IFace");
+            System.out.println("[9] Ver inbox");
+            System.out.println("[10] Enviar mensagem para alguém");
+            System.out.println("[100] Encerrar sessão");
+            System.out.println("[101] Sair do IFace");
+            System.out.println("[102] Remover a conta");
             System.out.print("=> ");
             int option = this.reader.nextInt();
             switch (option) {
@@ -78,13 +80,19 @@ public class CLI {
                     this.showFriends();
                     break;
                 case 9:
-                    this.logout();
+                    this.showInbox();
                     break;
                 case 10:
-                    this.removeUser();
+                    this.sendMessageToInbox();
                     break;
                 case 100:
+                    this.logout();
+                    break;
+                case 101:
                     exitCLI = true;
+                    break;
+                case 102:
+                    this.removeUser();
                     break;
                 default:
                     break;
@@ -244,6 +252,27 @@ public class CLI {
         for (int i = 0; i < this.user.friendsIndexes.size(); i++) {
             Integer currentLoopIndex = this.user.friendsIndexes.get(i);
             System.out.println(this.db.users.get(currentLoopIndex));
+        }
+    }
+
+    public void showInbox() {
+        this.user.showInbox();
+    }
+
+    public void sendMessageToInbox() {
+        System.out.println("=> Mensagem para (username): ");
+        String to = this.reader.next();
+        this.reader.nextLine();
+        System.out.print("=> Conteúdo: ");
+        String content = this.reader.nextLine();
+        Message message = new Message(content, this.user.username);
+        for (int i = 0; i < this.db.users.size(); i++) {
+            if (this.db.users.get(i).username.equals(to)) {
+                this.db.users.get(i).inbox.addMessage(message, to);
+                this.db.users.get(this.currentUserIndex).inbox.addMessage(message, to);
+                System.out.println("Mensagem enviada para " + to + "!");
+                return;
+            }
         }
     }
 }
