@@ -163,6 +163,8 @@ public class CLI {
 
     public void viewProfile() {
         System.out.println("\n" + this.user + "\n");
+        this.showUserCommunities();
+        System.out.println();
     }
     
     public User editProfile() {
@@ -221,8 +223,24 @@ public class CLI {
             System.out.println("Comunidade inválida!");
             return;
         }
+        if (this.communities.get(number).users.contains(this.user.username)) {
+            System.out.println("Você já está nessa comunidade!");
+            return;
+        }
         this.communities.get(number).addUser(this.user.username);
         System.out.println("Você entrou na comunidade " + this.communities.get(number).name + ".");
+    }
+
+    public void showUserCommunities() {
+        System.out.println("==== SUAS COMUNIDADES ====");
+        for (int i = 0; i < this.communities.size(); i++) {
+            Community community = this.communities.get(i);
+            if (!community.users.contains(this.user.username)) {
+                continue;
+            }
+            System.out.println(community.name);
+            System.out.println("  => " + community.description);
+        }
     }
 
     public void showCommunity() {
