@@ -53,8 +53,9 @@ public class CLI {
             System.out.println("[8] Ver amigos");
             System.out.println("[9] Ver inbox");
             System.out.println("[10] Enviar mensagem para alguém");
-            System.out.println("[11] Comunidades");
-            System.out.println("[12] Criar comunidade");
+            System.out.println("[11] Mandar mensagem para comunidades");
+            System.out.println("[12] Entrar em comunidades");
+            System.out.println("[13] Criar comunidade");
             System.out.println("[100] Encerrar sessão");
             System.out.println("[101] Sair do IFace");
             System.out.println("[102] Remover a conta");
@@ -96,6 +97,9 @@ public class CLI {
                     this.showCommunity();
                     break;
                 case 12:
+                    this.enterCommunity();
+                    break;
+                case 13:
                     this.createCommunity();
                     break;
                 case 100:
@@ -207,6 +211,18 @@ public class CLI {
         String description = this.reader.nextLine();
         this.communities.add(new Community(this.user.username, name, description));
         System.out.println("Comunidade criada com sucesso!");
+    }
+
+    public void enterCommunity() {
+        this.showAllCommunities();
+        System.out.println("Informe o número da comunidade: ");
+        Integer number = this.reader.nextInt() - 1;
+        if (number < 0 || number >= this.communities.size()) {
+            System.out.println("Comunidade inválida!");
+            return;
+        }
+        this.communities.get(number).addUser(this.user.username);
+        System.out.println("Você entrou na comunidade " + this.communities.get(number).name + ".");
     }
 
     public void showCommunity() {

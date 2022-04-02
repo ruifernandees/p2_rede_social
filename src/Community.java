@@ -4,18 +4,19 @@ public class Community {
     public String name;
     public String description;
     public Feed content;
-    public ArrayList<User> users;
+    public ArrayList<String> users;
     public String ownerUsername;
 
     public Community(String ownerUsername, String name, String description) {
         this.content = new Feed();
-        this.users = new ArrayList<User>();
+        this.users = new ArrayList<String>();
+        this.users.add(ownerUsername);
         this.ownerUsername = ownerUsername;
         this.name = name;
         this.description = description;
     }
 
-    public void addUser(User user) {
+    public void addUser(String user) {
         this.users.add(user);
     }
 
