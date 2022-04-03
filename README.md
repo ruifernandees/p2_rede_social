@@ -20,8 +20,8 @@
 7. Recuperar Informações sobre um determinado Usuário - (Método viewProfile de CLI)
 8. Remoção de Conta - (Método removeUser de CLI)
 9. Envio de mensagens no Feed - (Método sendMessageToFeed de CLI);
-10. Controle de visualização do Feed - (Propriedade feedMessageOnlyForFriends de User)
-de Notícias
+10. Controle de visualização do Feed de Notícias - (Propriedade feedMessageOnlyForFriends de User)
+
 
 ## Como rodar
 ```bash
