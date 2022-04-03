@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class Inbox {
-    private ArrayList<Conversation> conversations;
+    public ArrayList<Conversation> conversations;
     private String ownerUsername;
 
     public Inbox(String ownerUsername) {

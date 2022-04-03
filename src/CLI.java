@@ -137,9 +137,13 @@ public class CLI {
         }
         if (userToLogin != null) {
             if (userToLogin.pwd.equals(pwd)) {
-                this.user = userToLogin;
-                this.user.setLogged(true);
-                this.currentUserIndex = currentUserIndex;
+                if (userToLogin.isActivated) {
+                    this.user = userToLogin;
+                    this.currentUserIndex = currentUserIndex;
+                    System.out.println("Login realizado com sucesso!");
+                } else {
+                    System.out.println("Usuário apagado!");
+                }
             } else {
                 System.out.println("Senha inválida!");
             }
@@ -190,7 +194,18 @@ public class CLI {
 
     public void removeUser() {
         String username = this.user.username;
-        this.db.users.remove(currentUserIndex);
+        for (Community community : this.communities) {
+            community.users.removeIf(user -> user.equals(username));
+            if (community.ownerUsername.equals(username)) {
+                this.communities.remove(community);
+            }
+        }
+        for (User user : this.db.users) {
+            user.friendsIndexes.removeIf(friend -> friend.equals(currentUserIndex));
+            user.requestingYourFriendshipIndexes.removeIf(friendRequest -> friendRequest.equals(currentUserIndex));
+            user.inbox.conversations.removeIf(conversation -> conversation.getFirstUser().equals(username) || conversation.getSecondUser().equals(username));
+        }
+        this.db.users.get(currentUserIndex).isActivated = false;
         this.user = null;
         this.currentUserIndex = -1;
         this.feed.messages.removeIf(message -> message.username.equals(username));
@@ -283,6 +298,7 @@ public class CLI {
             User currentUser = this.db.users.get(i);
             if (i == this.currentUserIndex) continue;
             if (this.user.friendsIndexes.contains(i)) continue;
+            if (!this.db.users.get(i).isActivated) continue;
             if (this.db.users.get(i).requestingYourFriendshipIndexes.contains(this.currentUserIndex)) continue;
             System.out.println(i + ". " + currentUser.username + ". Adicionar [S/N]");
             String response = this.reader.next();
@@ -303,6 +319,7 @@ public class CLI {
 
     public void showFriendsRequests() {
         int amountOfRequests = this.user.requestingYourFriendshipIndexes.size();
+        System.out.println(this.user.requestingYourFriendshipIndexes);
         if (amountOfRequests == 0) {
             System.out.println("\nNão há solicitações de amizade no momento!\n");
             return;
@@ -313,6 +330,7 @@ public class CLI {
             Integer currentUserLoopIndex = this.user.requestingYourFriendshipIndexes.get(i);
             System.out.println(currentUserLoopIndex);
             User currentUser = this.db.users.get(currentUserLoopIndex);
+            // if (!currentUser.isActivated) continue;
             System.out.println(currentUser);
             System.out.println(i + ". " + currentUser.username + ". Aceitar? [S/N]");
             String response = this.reader.next();
