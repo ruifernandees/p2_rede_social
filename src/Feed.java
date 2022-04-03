@@ -11,13 +11,22 @@ public class Feed {
         this.messages.add(message);
     }
 
-    public void show() {
+    public void show(Integer viewerIndex, UserDB db) {
         if (this.messages.size() == 0) {
             System.out.println("Sem conteúdo!\n");
             return;
         }
         for (int i = 0; i < this.messages.size(); i++) {
-            System.out.println(this.messages.get(i));
+            for (User user : db.users) {
+                if (user.username.equals(this.messages.get(i).username)) {
+                    if (!user.feedMessageOnlyForFriends) {
+                        System.out.println(this.messages.get(i));
+                    } else if (user.friendsIndexes.contains(viewerIndex) || user.username.equals(db.users.get(viewerIndex).username)) {
+                        System.out.println(this.messages.get(i));
+                    }
+                    break;
+                }
+            }
         }
         System.out.println();
     }

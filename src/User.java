@@ -9,6 +9,7 @@ public class User {
     public Inbox inbox;
     private Boolean logged = false;
     public boolean isActivated = true;
+    public boolean feedMessageOnlyForFriends = false;
 
     public User(
         String username, 

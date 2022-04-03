@@ -70,7 +70,7 @@ public class CLI {
                     break;
                 case 3:
                     System.out.println("=== Feed ===");
-                    this.feed.show();
+                    this.feed.show(currentUserIndex, this.db);
                     break;
                 case 4:
                     this.sendMessageToFeed();
@@ -187,6 +187,13 @@ public class CLI {
         String newPwd = this.reader.next();
         if (!newPwd.equals("N")) {
             this.user.pwd  = newPwd;
+        }
+        System.out.println("Mostrar mensagens do feed apenas para amigos? [S/N]");
+        String result = this.reader.next();
+        if (result.equals("S")) {
+            this.user.feedMessageOnlyForFriends = true;
+        } else if (result.equals("N")) {
+            this.user.feedMessageOnlyForFriends = false;
         }
         System.out.println("Dados atualizados com sucesso!");
         return this.user;
@@ -330,7 +337,6 @@ public class CLI {
             Integer currentUserLoopIndex = this.user.requestingYourFriendshipIndexes.get(i);
             System.out.println(currentUserLoopIndex);
             User currentUser = this.db.users.get(currentUserLoopIndex);
-            // if (!currentUser.isActivated) continue;
             System.out.println(currentUser);
             System.out.println(i + ". " + currentUser.username + ". Aceitar? [S/N]");
             String response = this.reader.next();
