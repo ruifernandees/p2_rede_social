@@ -31,7 +31,7 @@ public class CLI {
             int option = this.reader.nextInt();
             switch (option) {
                 case 1:
-                    this.login();
+                    this.loginInterface();
                     break;
                 case 2:
                     this.signUp();
@@ -120,11 +120,15 @@ public class CLI {
         }
     }
 
-    public void login() {
+    public void loginInterface() {
         System.out.print("Informe o login: ");
         String login = reader.next();
         System.out.print("Informe a senha: ");
         String pwd = reader.next();
+        this.login(login, pwd);
+    }
+
+    public void login(String login, String pwd) {
         User userToLogin = null;
         int currentUserIndex = -1;
         for (int i = 0; i < this.db.users.size(); i++) {
@@ -159,9 +163,9 @@ public class CLI {
         String login = reader.next();
         System.out.print("Informe a senha: ");
         String pwd = reader.next();
-        this.user = new User(username, login, pwd, new ArrayList<Integer>(), new ArrayList<Integer>());
-        this.viewProfile();
+        User user = new User(username, login, pwd, new ArrayList<Integer>(), new ArrayList<Integer>());
         this.db.addUser(user);
+        this.login(login, pwd);
         return user;
     }  
 
