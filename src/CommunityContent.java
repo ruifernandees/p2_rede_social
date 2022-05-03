@@ -1,16 +1,10 @@
-import java.util.ArrayList;
-
-public class CommunityContent {
-    public ArrayList<Message> messages;
-    
-    public CommunityContent() {
-        this.messages = new ArrayList<Message>();
-    }
-
+public class CommunityContent extends Content {
+    @Override
     public void addMessage(Message message) {
-        this.messages.add(message);
+        super.addMessage(message);
     }
 
+    @Override
     public void show() {
         if (this.messages.size() == 0) {
             System.out.println("Sem conteúdo!\n");

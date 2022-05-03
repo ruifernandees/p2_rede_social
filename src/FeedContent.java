@@ -1,17 +1,12 @@
-import java.util.ArrayList;
+// import java.util.ArrayList;
 
-public class Feed {
-    public ArrayList<Message> messages;
-    
-    public Feed() {
-        this.messages = new ArrayList<Message>();
-    }
-
+public class FeedContent extends Content {
+    @Override
     public void addMessage(Message message) {
-        this.messages.add(message);
+        super.addMessage(message);
     }
 
-    public void show(Integer viewerIndex, IUserDB db) {
+    public void showFromDB(Integer viewerIndex, IUserDB db) {
         if (this.messages.size() == 0) {
             System.out.println("Sem conteúdo!\n");
             return;

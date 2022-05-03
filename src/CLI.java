@@ -7,13 +7,13 @@ public class CLI {
     private IUserDB db;
     private User user;
     private int currentUserIndex;
-    private Feed feed;
+    private FeedContent feed;
     private ArrayList<Community> communities;
 
     public CLI(IUserDB db) {
         this.reader = new Scanner(System.in);
         this.db = db;
-        this.feed = new Feed();
+        this.feed = new FeedContent();
         this.communities = new ArrayList<Community>();
         this.communities.add(new Community("José", "Comunidade do bairro", "Uma descrição"));
         this.communities.add(new Community("João", "Os gamers", "Outra descrição"));
@@ -70,7 +70,7 @@ public class CLI {
                     break;
                 case 3:
                     System.out.println("=== Feed ===");
-                    this.feed.show(currentUserIndex, this.db);
+                    this.feed.showFromDB(currentUserIndex, this.db);
                     break;
                 case 4:
                     this.sendMessageToFeed();
