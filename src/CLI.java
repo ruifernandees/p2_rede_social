@@ -4,15 +4,15 @@ import java.util.Scanner;
 public class CLI {
 
     private Scanner reader;
-    private UserDB db;
+    private IUserDB db;
     private User user;
     private int currentUserIndex;
     private Feed feed;
     private ArrayList<Community> communities;
 
-    public CLI() {
+    public CLI(IUserDB db) {
         this.reader = new Scanner(System.in);
-        this.db = new UserDB();
+        this.db = db;
         this.feed = new Feed();
         this.communities = new ArrayList<Community>();
         this.communities.add(new Community("José", "Comunidade do bairro", "Uma descrição"));
@@ -131,8 +131,8 @@ public class CLI {
     public void login(String login, String pwd) {
         User userToLogin = null;
         int currentUserIndex = -1;
-        for (int i = 0; i < this.db.users.size(); i++) {
-            User currentUser = this.db.users.get(i);
+        for (int i = 0; i < this.db.amountOfUsers(); i++) {
+            User currentUser = this.db.getUser(i);
             if (currentUser.login.equals(login)) {
                 userToLogin = currentUser;
                 currentUserIndex = i;
@@ -211,12 +211,12 @@ public class CLI {
                 this.communities.remove(community);
             }
         }
-        for (User user : this.db.users) {
+        for (User user : this.db.getAllUsers()) {
             user.friendsIndexes.removeIf(friend -> friend.equals(currentUserIndex));
             user.requestingYourFriendshipIndexes.removeIf(friendRequest -> friendRequest.equals(currentUserIndex));
             user.inbox.conversations.removeIf(conversation -> conversation.getFirstUser().equals(username) || conversation.getSecondUser().equals(username));
         }
-        this.db.users.get(currentUserIndex).isActivated = false;
+        this.db.getUser(currentUserIndex).isActivated = false;
         this.user = null;
         this.currentUserIndex = -1;
         this.feed.messages.removeIf(message -> message.username.equals(username));
@@ -299,30 +299,30 @@ public class CLI {
 
     public void logout() {
         System.out.println("Até mais, " + this.user.username + "!");
-        this.db.users.get(currentUserIndex).setLogged(false);
+        this.db.getUser(currentUserIndex).setLogged(false);
         this.currentUserIndex = -1;
         this.user = null;
     }
 
     public void sendFriendRequest() {
-        for (int i = 0; i < this.db.users.size(); i++) {
-            User currentUser = this.db.users.get(i);
+        for (int i = 0; i < this.db.amountOfUsers(); i++) {
+            User currentUser = this.db.getUser(i);
             if (i == this.currentUserIndex) continue;
             if (this.user.friendsIndexes.contains(i)) continue;
-            if (!this.db.users.get(i).isActivated) continue;
-            if (this.db.users.get(i).requestingYourFriendshipIndexes.contains(this.currentUserIndex)) continue;
+            if (!this.db.getUser(i).isActivated) continue;
+            if (this.db.getUser(i).requestingYourFriendshipIndexes.contains(this.currentUserIndex)) continue;
             System.out.println(i + ". " + currentUser.username + ". Adicionar [S/N]");
             String response = this.reader.next();
             if (response.equals("S")) {
                 if (this.user.requestingYourFriendshipIndexes.contains(i)) {
                     this.user.friendsIndexes.add(i);
-                    this.db.users.get(i).friendsIndexes.add(this.currentUserIndex);
+                    this.db.getUser(i).friendsIndexes.add(this.currentUserIndex);
                     System.out.println(currentUser.username + " adicionado, pois ele já havia requisitado a você!");
                     Integer indexC = i;
                     this.user.requestingYourFriendshipIndexes.removeIf(index -> index == indexC);
                     continue;
                 }
-                this.db.users.get(i).requestingYourFriendshipIndexes.add(this.currentUserIndex);
+                this.db.getUser(i).requestingYourFriendshipIndexes.add(this.currentUserIndex);
                 System.out.println("Pedido feito a " + currentUser.username + " com sucesso!");
             }
         }
@@ -340,13 +340,13 @@ public class CLI {
             System.out.println(this.user.requestingYourFriendshipIndexes);
             Integer currentUserLoopIndex = this.user.requestingYourFriendshipIndexes.get(i);
             System.out.println(currentUserLoopIndex);
-            User currentUser = this.db.users.get(currentUserLoopIndex);
+            User currentUser = this.db.getUser(currentUserLoopIndex);
             System.out.println(currentUser);
             System.out.println(i + ". " + currentUser.username + ". Aceitar? [S/N]");
             String response = this.reader.next();
             if (response.equals("S")) {
                 this.user.friendsIndexes.add(currentUserLoopIndex);
-                this.db.users.get(currentUserLoopIndex).friendsIndexes.add(this.currentUserIndex);
+                this.db.getUser(currentUserLoopIndex).friendsIndexes.add(this.currentUserIndex);
                 System.out.println(currentUser.username + " adicionado!");
                 addedUsersIndexes.add(i);
             } else if (response.equals("N")) {
@@ -355,16 +355,16 @@ public class CLI {
         }
         
         for (int j = 0; j < addedUsersIndexes.size(); j++) {
-            this.db.users.get(this.currentUserIndex).requestingYourFriendshipIndexes.remove(0);
+            this.db.getUser(this.currentUserIndex).requestingYourFriendshipIndexes.remove(0);
         }
-        System.out.println(this.db.users.get(this.currentUserIndex).requestingYourFriendshipIndexes);
+        System.out.println(this.db.getUser(this.currentUserIndex).requestingYourFriendshipIndexes);
     }
 
     public void showFriends() {
         System.out.println("\n=== Amigos ===");
         for (int i = 0; i < this.user.friendsIndexes.size(); i++) {
             Integer currentLoopIndex = this.user.friendsIndexes.get(i);
-            System.out.println(this.db.users.get(currentLoopIndex));
+            System.out.println(this.db.getUser(currentLoopIndex));
         }
     }
 
@@ -379,10 +379,10 @@ public class CLI {
         System.out.print("=> Conteúdo: ");
         String content = this.reader.nextLine();
         Message message = new Message(content, this.user.username);
-        for (int i = 0; i < this.db.users.size(); i++) {
-            if (this.db.users.get(i).username.equals(to)) {
-                this.db.users.get(i).inbox.addMessage(message, to);
-                this.db.users.get(this.currentUserIndex).inbox.addMessage(message, to);
+        for (int i = 0; i < this.db.amountOfUsers(); i++) {
+            if (this.db.getUser(i).username.equals(to)) {
+                this.db.getUser(i).inbox.addMessage(message, to);
+                this.db.getUser(this.currentUserIndex).inbox.addMessage(message, to);
                 System.out.println("Mensagem enviada para " + to + "!");
                 return;
             }
