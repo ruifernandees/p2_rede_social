@@ -46,7 +46,7 @@ public class CLI {
                 case 2:
                     try {
                         this.signUp();
-                    } catch (Exception e) {
+                    } catch (SignUpException e) {
                         System.out.println(e.getMessage());
                     }
                     break; 
