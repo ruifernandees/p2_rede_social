@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CLI {
 
@@ -42,8 +44,12 @@ public class CLI {
                     this.loginInterface();
                     break;
                 case 2:
-                    this.signUp();
-                    break;
+                    try {
+                        this.signUp();
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                    }
+                    break; 
                 case 101:
                     exitCLI = true;
                     break;
@@ -172,13 +178,34 @@ public class CLI {
         }
     }
 
-    public User signUp() {
+    public User signUp() throws SignUpException {
         System.out.print("Informe o nome de usuário: ");
-        String username = reader.next();
+        reader.nextLine();
+        String username = reader.nextLine();
+        // System.out.println("["+username+"]");
+        Pattern nonAlphanumericPattern = Pattern.compile("[^a-zA-Z\\s]+");
+        Matcher usernameMatcher = nonAlphanumericPattern.matcher(username);
+        boolean hasNonAlphanumeric = usernameMatcher.find();
+        if (hasNonAlphanumeric) {
+            throw new SignUpException("Nome de usuário possui caracteres inválido!");
+        }
         System.out.print("Informe o login: ");
-        String login = reader.next();
+        String login = reader.nextLine();
+        // System.out.println("["+login+"]");
+        Pattern whitespacePattern = Pattern.compile("\\s");
+        Matcher loginMatcher = whitespacePattern.matcher(login);
+        boolean hasWhitespace = loginMatcher.find();
+        if (hasWhitespace) {
+            throw new SignUpException("Login não deve possuir espaços em branco!");
+        }
         System.out.print("Informe a senha: ");
-        String pwd = reader.next();
+        String pwd = reader.nextLine();
+        // System.out.println("["+pwd+"]");
+        Matcher pwdMatcher = whitespacePattern.matcher(pwd);
+        boolean hasWhitespaceInPwd = pwdMatcher.find();
+        if (hasWhitespaceInPwd) {
+            throw new SignUpException("Senha não deve possuir espaços em branco!");
+        }
         User user = new User(username, login, pwd, new ArrayList<Integer>(), new ArrayList<Integer>());
         this.db.addUser(user);
         this.login(login, pwd);
