@@ -288,16 +288,16 @@ public class CLI {
         this.showAllCommunities();
         System.out.println("Informe o número da comunidade: ");
         Integer number = this.reader.nextInt() - 1;
-        if (number < 0 || number >= this.communities.size()) {
+        try {
+            if (this.communities.get(number).users.contains(this.user.username)) {
+                System.out.println("Você já está nessa comunidade!");
+                return;
+            }
+            this.communities.get(number).addUser(this.user.username);
+            System.out.println("Você entrou na comunidade " + this.communities.get(number).name + ".");
+        } catch (IndexOutOfBoundsException e) {
             System.out.println("Comunidade inválida!");
-            return;
         }
-        if (this.communities.get(number).users.contains(this.user.username)) {
-            System.out.println("Você já está nessa comunidade!");
-            return;
-        }
-        this.communities.get(number).addUser(this.user.username);
-        System.out.println("Você entrou na comunidade " + this.communities.get(number).name + ".");
     }
 
     public void showUserCommunities() {
