@@ -155,7 +155,7 @@ public class CLI {
                 break;
             }
         }
-        if (userToLogin != null) {
+        try {
             if (userToLogin.pwd.equals(pwd)) {
                 if (userToLogin.isActivated) {
                     this.user = userToLogin;
@@ -166,8 +166,8 @@ public class CLI {
                 }
             } else {
                 System.out.println("Senha inválida!");
-            }
-        } else {
+            } 
+        } catch (NullPointerException e) {
             System.out.println("Crie uma conta para poder logar!");
         }
     }
