@@ -111,7 +111,11 @@ public class CLI {
                     }
                     break;
                 case 7:
-                    this.showFriendsRequests();
+                    try {
+                        this.showFriendsRequests();
+                    } catch (IllegalArgumentException e) {
+                        System.out.println(e.getMessage());
+                    }
                     break;
                 case 8:
                     this.showFriends();
@@ -425,6 +429,8 @@ public class CLI {
                 addedUsersIndexes.add(i);
             } else if (response.equals("N")) {
                 System.out.println(currentUser.username + " não adicionado!");
+            } else {
+                throw new IllegalArgumentException("Resposta inválida!");
             }
         }
         
