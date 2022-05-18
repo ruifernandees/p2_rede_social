@@ -104,7 +104,11 @@ public class CLI {
                     this.db.showAllUsers();
                     break;
                 case 6:
-                    this.sendFriendRequest();
+                    try {
+                        this.sendFriendRequest();
+                    } catch (IllegalArgumentException e) {
+                        System.out.println(e.getMessage());
+                    }
                     break;
                 case 7:
                     this.showFriendsRequests();
@@ -370,7 +374,7 @@ public class CLI {
         this.user = null;
     }
 
-    public void sendFriendRequest() {
+    public void sendFriendRequest() throws IllegalArgumentException {
         for (int i = 0; i < this.db.amountOfUsers(); i++) {
             User currentUser = this.db.getUser(i);
             if (i == this.currentUserIndex) continue;
@@ -390,6 +394,10 @@ public class CLI {
                 }
                 this.db.getUser(i).requestingYourFriendshipIndexes.add(this.currentUserIndex);
                 System.out.println("Pedido feito a " + currentUser.username + " com sucesso!");
+            } else if (response.equals("N")) {
+                continue;
+            } else {
+                throw new IllegalArgumentException("Resposta inválida!");
             }
         }
     }
