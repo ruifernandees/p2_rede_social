@@ -94,7 +94,11 @@ public class CLI {
                     this.feed.showFromDB(currentUserIndex, this.db);
                     break;
                 case 4:
-                    this.sendMessageToFeed();
+                    try {
+                        this.sendMessageToFeed();
+                    } catch (MessageException e) {
+                        System.out.println(e.getMessage());
+                    }
                     break;
                 case 5:
                     this.db.showAllUsers();
@@ -270,10 +274,21 @@ public class CLI {
         System.out.println("Sua conta foi removida do IFace, " + username + ".");
     }
 
-    public void sendMessageToFeed() {
+    public void sendMessageToFeed() throws MessageException {
         this.reader.nextLine();
+        ArrayList<String> blackList = new ArrayList<>();
+        blackList.add("palavra proibida");
+        blackList.add("palavra2");
         System.out.println("Nova mensagem: ");
         String message = this.reader.nextLine();
+        for (String word : blackList) {
+            Pattern prohibitedWordPattern = Pattern.compile(word);
+            Matcher wordMatcher = prohibitedWordPattern.matcher(message);
+            boolean hasProhibitedWord = wordMatcher.find();
+            if (hasProhibitedWord) {
+                throw new MessageException("Mensagem não enviada!");
+            }
+        }
         System.out.println(message);
         this.feed.addMessage(new Message(message, this.user.username));
     }
