@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class CLI {
@@ -28,7 +29,14 @@ public class CLI {
             System.out.println("[2] Cadastrar");
             System.out.println("[101] Sair do IFace");
             System.out.print("=> ");
-            int option = this.reader.nextInt();
+            int option = -1;
+            try {
+                option = this.reader.nextInt();
+            } catch (InputMismatchException e) {
+                System.out.println("Opção inválida!");
+                this.options();
+                return;
+            }
             switch (option) {
                 case 1:
                     this.loginInterface();
@@ -60,7 +68,14 @@ public class CLI {
             System.out.println("[101] Sair do IFace");
             System.out.println("[102] Remover a conta");
             System.out.print("=> ");
-            int option = this.reader.nextInt();
+            int option;
+            try {
+                option = this.reader.nextInt();
+            } catch (Exception e) {
+                System.out.println("Opção inválida!");
+                this.options();
+                return;
+            }
             switch (option) {
                 case 1:
                     this.editProfile();
@@ -112,6 +127,7 @@ public class CLI {
                     this.removeUser();
                     break;
                 default:
+                    System.out.println("Opção inválida!");
                     break;
             }
         }
