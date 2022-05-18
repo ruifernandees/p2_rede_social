@@ -121,7 +121,11 @@ public class CLI {
                     this.enterCommunity();
                     break;
                 case 13:
-                    this.createCommunity();
+                    try {
+                        this.createCommunity();
+                    } catch (CommunityException e) {
+                        System.out.println(e.getMessage());
+                    }
                     break;
                 case 100:
                     this.logout();
@@ -274,10 +278,14 @@ public class CLI {
         this.feed.addMessage(new Message(message, this.user.username));
     }
 
-    public void createCommunity() {
+    public void createCommunity() throws CommunityException {
         this.reader.nextLine();
         System.out.println("Nome da comunidade: ");
         String name = this.reader.nextLine();
+        Community communityWithTheSameName = this.communities.stream().filter(community -> community.name.equals(name)).findFirst().orElse(null);
+        if (communityWithTheSameName != null) {
+            throw new CommunityException("Já existe uma comunidade com esse nome!");
+        }
         System.out.println("Descrição da comunidade: ");
         String description = this.reader.nextLine();
         this.communities.add(new Community(this.user.username, name, description));
