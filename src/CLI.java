@@ -124,7 +124,11 @@ public class CLI {
                     this.showInbox();
                     break;
                 case 10:
-                    this.sendMessageToInbox();
+                    try {
+                        this.sendMessageToInbox();
+                    } catch (IllegalArgumentException e) {
+                        System.out.println(e.getMessage());
+                    }
                     break;
                 case 11:
                     this.showCommunity();
@@ -452,10 +456,20 @@ public class CLI {
         this.user.showInbox();
     }
 
-    public void sendMessageToInbox() {
+    public void sendMessageToInbox() throws IllegalArgumentException {
         System.out.println("=> Mensagem para (username): ");
         String to = this.reader.next();
         this.reader.nextLine();
+        Boolean userExists = false;
+        for (int i = 0; i < this.db.amountOfUsers(); i++) {
+            if (this.db.getUser(i).username.equals(to)) {
+                userExists = true;
+                break;
+            }
+        }
+        if (!userExists) {
+            throw new IllegalArgumentException("Erro! Usuário não existe!");
+        }
         System.out.print("=> Conteúdo: ");
         String content = this.reader.nextLine();
         Message message = new Message(content, this.user.username);
