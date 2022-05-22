@@ -211,28 +211,30 @@ public class CLI {
         reader.nextLine();
         String username = reader.nextLine();
         // System.out.println("["+username+"]");
-        Pattern nonAlphanumericPattern = Pattern.compile("[^a-zA-Z\\s]+");
-        Matcher usernameMatcher = nonAlphanumericPattern.matcher(username);
-        boolean hasNonAlphanumeric = usernameMatcher.find();
-        if (hasNonAlphanumeric) {
-            throw new SignUpException("Nome de usuário possui caracteres inválido!");
+        Boolean hasNonAlphaChar = ProfileMatcher.hasNonAlphaChar(username);
+        Boolean hasSomeAlphaChar = ProfileMatcher.hasSomeAlphaChar(username);
+        if (hasNonAlphaChar || !hasSomeAlphaChar) {
+            throw new SignUpException("Nome de usuário possui caracteres inválidos!");
         }
         System.out.print("Informe o login: ");
         String login = reader.nextLine();
         // System.out.println("["+login+"]");
-        Pattern whitespacePattern = Pattern.compile("\\s");
-        Matcher loginMatcher = whitespacePattern.matcher(login);
-        boolean hasWhitespace = loginMatcher.find();
-        if (hasWhitespace) {
-            throw new SignUpException("Login não deve possuir espaços em branco!");
+        Boolean hasWhitespace = ProfileMatcher.hasWhitespace(login);
+        Boolean hasSomeAlphanumericCharInLogin = ProfileMatcher.hasSomeAlphanumericChar(login);
+        if (hasWhitespace || !hasSomeAlphanumericCharInLogin) {
+            throw new SignUpException("Login possui espaços em branco ou caracteres inválidos!");
+        }
+        Boolean hasUserWithTheSameLogin = ProfileMatcher.userExists(login, this.db);
+        if (hasUserWithTheSameLogin) {
+            throw new SignUpException("Login já cadastrado em outra conta!");
         }
         System.out.print("Informe a senha: ");
         String pwd = reader.nextLine();
         // System.out.println("["+pwd+"]");
-        Matcher pwdMatcher = whitespacePattern.matcher(pwd);
-        boolean hasWhitespaceInPwd = pwdMatcher.find();
-        if (hasWhitespaceInPwd) {
-            throw new SignUpException("Senha não deve possuir espaços em branco!");
+        boolean hasWhitespaceInPwd = ProfileMatcher.hasWhitespace(pwd);
+        Boolean hasSomeAlphanumericCharOnPwd = ProfileMatcher.hasSomeAlphanumericChar(pwd);
+        if (hasWhitespaceInPwd || !hasSomeAlphanumericCharOnPwd) {
+            throw new SignUpException("Senha não deve possuir espaços em branco e deve ter conteúdo!");
         }
         User user = new User(username, login, pwd, new ArrayList<Integer>(), new ArrayList<Integer>());
         this.db.addUser(user);
@@ -249,18 +251,38 @@ public class CLI {
     public User editProfile() throws IllegalArgumentException {
         System.out.println("Edição perfil:");
         System.out.println("Novo nome [digite \"N\" caso queira manter o mesmo]");
-        String newName = this.reader.next();
+        this.reader.nextLine();
+        String newName = this.reader.nextLine();
         if (!newName.equals("N")) {
+            Boolean hasNonAlphaChar = ProfileMatcher.hasNonAlphaChar(newName);
+            Boolean hasSomeAlphaChar = ProfileMatcher.hasSomeAlphaChar(newName);
+            if (hasNonAlphaChar || !hasSomeAlphaChar) {
+                throw new IllegalArgumentException("Nome de usuário possui caracteres inválidos!");
+            }
             this.user.username  = newName;
         }
         System.out.println("Novo login [digite \"N\" caso queira manter o mesmo]");
-        String newLogin = this.reader.next();
+        String newLogin = this.reader.nextLine();
         if (!newLogin.equals("N")) {
+            Boolean hasWhitespace = ProfileMatcher.hasWhitespace(newLogin);
+            Boolean hasSomeAlphanumericCharInLogin = ProfileMatcher.hasSomeAlphanumericChar(newLogin);
+            if (hasWhitespace || !hasSomeAlphanumericCharInLogin) {
+                throw new IllegalArgumentException("Erro! Login possui espaços em branco ou caracteres inválidos!");
+            }
+            Boolean hasUserWithTheSameLogin = ProfileMatcher.userExists(newLogin, this.db);
+            if (hasUserWithTheSameLogin) {
+                throw new IllegalArgumentException("Erro! Já existe um usuário com esse login!");
+            }
             this.user.login  = newLogin;
         }
         System.out.println("Nova senha [digite \"N\" caso queira manter a mesma senha]");
-        String newPwd = this.reader.next();
+        String newPwd = this.reader.nextLine();
         if (!newPwd.equals("N")) {
+            boolean hasWhitespaceInPwd = ProfileMatcher.hasWhitespace(newPwd);
+            Boolean hasSomeAlphanumericCharOnPwd = ProfileMatcher.hasSomeAlphanumericChar(newPwd);
+            if (hasWhitespaceInPwd || !hasSomeAlphanumericCharOnPwd) {
+                throw new IllegalArgumentException("Erro! Senha não deve possuir espaços em branco e deve ter conteúdo!");
+            }
             this.user.pwd  = newPwd;
         }
         System.out.println("Mostrar mensagens do feed apenas para amigos? [S/N]");

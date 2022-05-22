@@ -8,6 +8,17 @@ public class ProfileMatcher {
     return hasWhitespaceMatcher.find();
   }
 
+  public static Boolean hasSomeAlphanumericChar(String text) {
+    Pattern alphaPattern = Pattern.compile("[a-zA-Z0-9_-]");
+    Matcher hasAlphaMatcher = alphaPattern.matcher(text);
+    return hasAlphaMatcher.find();
+  }
+  public static Boolean hasSomeAlphaChar(String text) {
+    Pattern alphaPattern = Pattern.compile("[a-zA-Z]");
+    Matcher hasAlphaMatcher = alphaPattern.matcher(text);
+    return hasAlphaMatcher.find();
+  }
+
   public static Boolean hasNonAlphaChar(String text)  {
     Pattern nonAlphanumericPattern = Pattern.compile("[^a-zA-Z\\s]+");
     Matcher usernameMatcher = nonAlphanumericPattern.matcher(text);
