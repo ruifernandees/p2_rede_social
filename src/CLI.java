@@ -84,7 +84,11 @@ public class CLI {
             }
             switch (option) {
                 case 1:
-                    this.editProfile();
+                    try {
+                        this.editProfile();
+                    } catch (IllegalArgumentException e) {
+                        System.out.println(e.getMessage());
+                    }
                     break;
                 case 2:
                     this.viewProfile();
@@ -242,7 +246,7 @@ public class CLI {
         System.out.println();
     }
     
-    public User editProfile() {
+    public User editProfile() throws IllegalArgumentException {
         System.out.println("Edição perfil:");
         System.out.println("Novo nome [digite \"N\" caso queira manter o mesmo]");
         String newName = this.reader.next();
@@ -265,6 +269,8 @@ public class CLI {
             this.user.feedMessageOnlyForFriends = true;
         } else if (result.equals("N")) {
             this.user.feedMessageOnlyForFriends = false;
+        } else {
+            throw new IllegalArgumentException("Opção inválida!");
         }
         System.out.println("Dados atualizados com sucesso!");
         return this.user;
