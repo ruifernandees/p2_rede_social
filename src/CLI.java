@@ -150,7 +150,11 @@ public class CLI {
                     exitCLI = true;
                     break;
                 case 102:
-                    this.removeUser();
+                    try {
+                        this.removeUserInterface();
+                    } catch (RemoveAccountException e) {
+                        System.out.println(e.getMessage());
+                    }
                     break;
                 default:
                     System.out.println("Opção inválida!");
@@ -264,6 +268,16 @@ public class CLI {
         }
         System.out.println("Dados atualizados com sucesso!");
         return this.user;
+    }
+
+    public void removeUserInterface() throws RemoveAccountException {
+        System.out.println("==== Remoção de conta ====");
+        System.out.println("Informe a senha: ");
+        String pwd = reader.next();
+        if (!pwd.equals(this.user.pwd)) {
+            throw new RemoveAccountException("Senha incorreta!");
+        }
+        this.removeUser();
     }
 
     public void removeUser() {
