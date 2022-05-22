@@ -351,19 +351,20 @@ public class CLI {
         this.showAllCommunities();
         System.out.println("Informe o número da comunidade: ");
         Integer number = this.reader.nextInt() - 1;
-        if (number < 0 || number >= this.communities.size()) {
+        try {
+            this.communities.get(number).show();
+            this.reader.nextLine();
+            System.out.println("Nova mensagem: [N, para sair] ");
+            String message = this.reader.nextLine();
+            if (message.equals("N")) {
+                return;
+            }
+            System.out.println(message);
+            this.communities.get(number).content.addMessage(new Message(message, this.user.username));
+        } catch (IndexOutOfBoundsException e) {
             System.out.println("Comunidade inválida!");
-            return;
+            this.reader.nextLine();
         }
-        this.communities.get(number).show();
-        this.reader.nextLine();
-        System.out.println("Nova mensagem: [N, para sair] ");
-        String message = this.reader.nextLine();
-        if (message.equals("N")) {
-            return;
-        }
-        System.out.println(message);
-        this.communities.get(number).content.addMessage(new Message(message, this.user.username));
     }
 
     public void showAllCommunities() {
