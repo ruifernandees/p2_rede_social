@@ -77,7 +77,7 @@ public class CLI {
             int option;
             try {
                 option = this.reader.nextInt();
-            } catch (Exception e) {
+            } catch (InputMismatchException e) {
                 System.out.println("Opção inválida!");
                 this.options();
                 return;
