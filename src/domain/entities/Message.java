@@ -1,4 +1,4 @@
-package entities;
+package domain.entities;
 public class Message {
     public String content;
     public String username;

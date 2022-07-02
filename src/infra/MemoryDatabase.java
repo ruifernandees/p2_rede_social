@@ -2,8 +2,8 @@ package infra;
 
 import java.util.ArrayList;
 
-import entities.Community;
-import entities.User;
+import domain.entities.Community;
+import domain.entities.User;
 
 public class MemoryDatabase {
     public ArrayList<User> users; 

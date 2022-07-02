@@ -1,8 +1,8 @@
+import domain.singletons.AuthenticationProvider;
 import presentation.cli.CLI;
 import presentation.cli.CLIConstants;
 import presentation.cli.strategies.AppCLIStrategy;
 import presentation.cli.strategies.AuthenticationCLIStrategy;
-import singletons.AuthenticationProvider;
 
 public class IFace {
 

@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-import entities.User;
+import domain.entities.User;
 
 public interface IUserDB {
   public void showAllUsers();

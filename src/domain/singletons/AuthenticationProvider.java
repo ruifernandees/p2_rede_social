@@ -1,6 +1,6 @@
-package singletons;
+package domain.singletons;
 
-import entities.User;
+import domain.entities.User;
 
 public class AuthenticationProvider {
     private static AuthenticationProvider instance;
