@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import domain.entities.Community;
 import domain.entities.User;
 import domain.repositories.ICommunitiesRepository;
-import singletons.DatabaseConnection;
+import infra.singletons.DatabaseConnection;
 
 public class MemoryCommunitiesRepository implements ICommunitiesRepository {
 

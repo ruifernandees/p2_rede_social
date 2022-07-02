@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import domain.dtos.FindByLoginDTO;
 import domain.entities.User;
 import domain.repositories.IUsersRepository;
-import singletons.DatabaseConnection;
+import infra.singletons.DatabaseConnection;
 
 public class MemoryUsersRepository implements IUsersRepository {
 

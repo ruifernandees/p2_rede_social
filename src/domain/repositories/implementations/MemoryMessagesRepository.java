@@ -3,7 +3,7 @@ package domain.repositories.implementations;
 import domain.entities.FeedContent;
 import domain.entities.Message;
 import domain.repositories.IMessagesRepository;
-import singletons.DatabaseConnection;
+import infra.singletons.DatabaseConnection;
 
 public class MemoryMessagesRepository implements IMessagesRepository {
 
