@@ -3,15 +3,18 @@ package infra;
 import java.util.ArrayList;
 
 import domain.entities.Community;
+import domain.entities.FeedContent;
 import domain.entities.User;
 
 public class MemoryDatabase {
     public ArrayList<User> users; 
     public ArrayList<Community> communities; 
+    public FeedContent feed; 
 
     public MemoryDatabase() {
         this.users = new ArrayList<User>();
         this.communities = new ArrayList<Community>();
+        this.feed = new FeedContent();
         this.addDefaultUsers();
         this.addDefaultCommunities();
     }

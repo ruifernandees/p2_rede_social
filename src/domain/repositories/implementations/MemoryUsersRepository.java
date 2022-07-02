@@ -16,6 +16,11 @@ public class MemoryUsersRepository implements IUsersRepository {
     }
 
     @Override
+    public ArrayList<User> findAll() {
+        return this.connection.getMemoryDatabase().users;
+    }
+
+    @Override
     public FindByLoginDTO findByLogin(String login) {
         ArrayList<User> users = this.connection.getMemoryDatabase().users;
         for (int i = 0; i < users.size(); i++) {
@@ -37,4 +42,6 @@ public class MemoryUsersRepository implements IUsersRepository {
         FindByLoginDTO userDTO = this.findByLogin(user.login);
         this.connection.getMemoryDatabase().users.set(userDTO.userIndex, user);
     }
+
+    
 }

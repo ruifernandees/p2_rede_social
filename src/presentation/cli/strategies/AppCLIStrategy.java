@@ -3,13 +3,20 @@ package presentation.cli.strategies;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 
+import domain.dtos.ShowFeedDTO;
 import domain.entities.Community;
+import domain.entities.FeedContent;
+import domain.entities.Message;
 import domain.entities.User;
 import domain.repositories.implementations.MemoryCommunitiesRepository;
+import domain.repositories.implementations.MemoryMessagesRepository;
 import domain.repositories.implementations.MemoryUsersRepository;
 import domain.singletons.AuthenticationProvider;
 import domain.usecases.GetUserCommunitiesUseCase;
+import domain.usecases.SendMessageToFeedUseCase;
+import domain.usecases.ShowFeedUseCase;
 import domain.usecases.UpdateUserFeedMessageVisibleOption;
+import domain.usecases.UpdateUserLoggedStatusUseCase;
 import domain.usecases.UpdateUserLoginUseCase;
 import domain.usecases.UpdateUserNameUseCase;
 import domain.usecases.UpdateUserPasswordUseCase;
@@ -54,12 +61,12 @@ public class AppCLIStrategy extends CLIStrategy {
             case 2:
                 this.viewProfile();
                 return CLIConstants.RUN_CLI;
-            // case 3:
-            //     this.showFeed();
-            //     return CLIConstants.RUN_CLI;
-            // case 4:
-            //     this.sendMessageToFeed();
-            //     return CLIConstants.RUN_CLI;
+            case 3:
+                this.showFeed();
+                return CLIConstants.RUN_CLI;
+            case 4:
+                this.sendMessageToFeed();
+                return CLIConstants.RUN_CLI;
             // case 5:
             //     this.showAllUsers();
             //     return CLIConstants.RUN_CLI;
@@ -87,9 +94,9 @@ public class AppCLIStrategy extends CLIStrategy {
             // case 13:
             //     this.createCommunity();
             //     return CLIConstants.RUN_CLI;
-            // case 100:
-            //     this.logout();
-            //     return CLIConstants.RUN_CLI;
+            case 100:
+                this.logout();
+                return CLIConstants.RUN_CLI;
             case 101:
                 return CLIConstants.CLOSE_CLI;
             // case 102:
@@ -156,4 +163,42 @@ public class AppCLIStrategy extends CLIStrategy {
         System.out.println();
     }
 
+    public void showFeed() {
+        AuthenticationProvider authenticationProvider = AuthenticationProvider.getInstance();
+        ShowFeedUseCase showFeedUseCase = new ShowFeedUseCase(
+            new MemoryUsersRepository(), 
+            new MemoryMessagesRepository() 
+        );
+        User currentUser = authenticationProvider.getCurrentUser();
+        Integer currentUserIndex = authenticationProvider.getCurrentUserIndex();
+        FeedContent restrictedFeed = showFeedUseCase.execute(new ShowFeedDTO(currentUser, currentUserIndex));
+        System.out.println("=== Feed ===");
+        for (Message message : restrictedFeed.messages) {
+            System.out.println(message);
+        }
+    }
+
+    public void sendMessageToFeed() {
+        this.reader.nextLine();
+        AuthenticationProvider authenticationProvider = AuthenticationProvider.getInstance();
+        User currentUser = authenticationProvider.getCurrentUser();
+        System.out.println("Nova mensagem: ");
+        String message = this.reader.nextLine();
+        try {
+            SendMessageToFeedUseCase sendMessageToFeedUseCase = new SendMessageToFeedUseCase(new MemoryMessagesRepository()); 
+            sendMessageToFeedUseCase.execute(message, currentUser.username);
+            System.out.println(message);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } 
+        
+    }
+
+    public void logout() {
+        AuthenticationProvider authenticationProvider = AuthenticationProvider.getInstance();
+        User currentUser = authenticationProvider.getCurrentUser();
+        System.out.println("Até mais, " + currentUser.username + "!");
+        UpdateUserLoggedStatusUseCase updateUserLoggedStatusUseCase = new UpdateUserLoggedStatusUseCase(new MemoryUsersRepository());
+        updateUserLoggedStatusUseCase.execute(false);
+    }
 }
