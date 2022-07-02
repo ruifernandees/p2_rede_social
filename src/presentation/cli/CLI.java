@@ -1,13 +1,13 @@
 package presentation.cli;
 
 public class CLI {
-    public ICLIStrategy strategy;
+    public CLIStrategy strategy;
 
     public boolean execute() {
         return this.strategy.execute();
     }
 
-    public void setStrategy(ICLIStrategy strategy) {
+    public void setStrategy(CLIStrategy strategy) {
         this.strategy = strategy;
     }
 }

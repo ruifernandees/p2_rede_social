@@ -31,4 +31,10 @@ public class MemoryUsersRepository implements IUsersRepository {
     public void create(User user) {
         this.connection.getMemoryDatabase().users.add(user);
     }
+
+    @Override
+    public void update(User user) {
+        FindByLoginDTO userDTO = this.findByLogin(user.login);
+        this.connection.getMemoryDatabase().users.set(userDTO.userIndex, user);
+    }
 }

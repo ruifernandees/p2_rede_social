@@ -1,7 +1,6 @@
 package presentation.cli.strategies;
 
 import java.util.InputMismatchException;
-import java.util.Scanner;
 
 import domain.dtos.CreateUserDTO;
 import domain.exceptions.LoginException;
@@ -10,14 +9,12 @@ import domain.repositories.implementations.MemoryUsersRepository;
 import domain.usecases.LoginUseCase;
 import domain.usecases.SignUpUseCase;
 import presentation.cli.CLIConstants;
-import presentation.cli.ICLIStrategy;
+import presentation.cli.CLIStrategy;
 
-public class AuthenticationCLIStrategy implements ICLIStrategy {
-
-    private Scanner reader;
+public class AuthenticationCLIStrategy extends CLIStrategy {
 
     public AuthenticationCLIStrategy() {
-        this.reader = new Scanner(System.in);
+        super();
     }
 
     @Override
