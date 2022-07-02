@@ -11,7 +11,7 @@ public class UpdateUserLoggedStatusUseCase {
         this.repository = repository;
     } 
 
-    public void execute(Boolean logged) throws IllegalArgumentException {
+    public void execute(Boolean logged) {
         AuthenticationProvider authenticationProvider = AuthenticationProvider.getInstance();
         User currentUser = authenticationProvider.getCurrentUser();
         currentUser.setLogged(logged);

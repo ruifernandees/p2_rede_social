@@ -12,6 +12,7 @@ import domain.repositories.implementations.MemoryCommunitiesRepository;
 import domain.repositories.implementations.MemoryMessagesRepository;
 import domain.repositories.implementations.MemoryUsersRepository;
 import domain.singletons.AuthenticationProvider;
+import domain.usecases.FindAllUsersUseCase;
 import domain.usecases.GetUserCommunitiesUseCase;
 import domain.usecases.SendMessageToFeedUseCase;
 import domain.usecases.ShowFeedUseCase;
@@ -67,9 +68,9 @@ public class AppCLIStrategy extends CLIStrategy {
             case 4:
                 this.sendMessageToFeed();
                 return CLIConstants.RUN_CLI;
-            // case 5:
-            //     this.showAllUsers();
-            //     return CLIConstants.RUN_CLI;
+            case 5:
+                this.showAllUsers();
+                return CLIConstants.RUN_CLI;
             // case 6:
             //     this.sendFriendRequest();
             //     return CLIConstants.RUN_CLI;
@@ -200,5 +201,13 @@ public class AppCLIStrategy extends CLIStrategy {
         System.out.println("Até mais, " + currentUser.username + "!");
         UpdateUserLoggedStatusUseCase updateUserLoggedStatusUseCase = new UpdateUserLoggedStatusUseCase(new MemoryUsersRepository());
         updateUserLoggedStatusUseCase.execute(false);
+    }
+
+    public void showAllUsers() {
+        FindAllUsersUseCase findAllUsersUseCase = new FindAllUsersUseCase(new MemoryUsersRepository());
+        ArrayList<User> allUsers = findAllUsersUseCase.execute();
+        for (User user : allUsers) {
+            System.out.println(user); 
+        }
     }
 }
