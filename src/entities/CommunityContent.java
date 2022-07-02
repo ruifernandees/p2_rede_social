@@ -1,3 +1,4 @@
+package entities;
 public class CommunityContent extends Content {
     @Override
     public void addMessage(Message message) {

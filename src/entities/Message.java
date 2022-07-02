@@ -1,3 +1,4 @@
+package entities;
 public class Message {
     public String content;
     public String username;

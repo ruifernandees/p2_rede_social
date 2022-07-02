@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 
+import entities.User;
+
 public interface IUserDB {
   public void showAllUsers();
   public void addUser(User user);

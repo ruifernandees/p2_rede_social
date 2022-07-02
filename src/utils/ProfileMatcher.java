@@ -1,5 +1,8 @@
+package utils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import entities.User;
 
 public class ProfileMatcher {
   public static Boolean hasWhitespace(String text)  {

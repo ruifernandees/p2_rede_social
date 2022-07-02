@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 
+import entities.User;
+
 public class UserDBArrayList implements IUserDB {
     public ArrayList<User> users;
 
