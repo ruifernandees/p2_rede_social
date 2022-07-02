@@ -26,4 +26,9 @@ public class MemoryUsersRepository implements IUsersRepository {
         }
         return null;
     }
+
+    @Override
+    public void create(User user) {
+        this.connection.getMemoryDatabase().users.add(user);
+    }
 }

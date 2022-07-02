@@ -2,8 +2,6 @@ package utils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import domain.entities.User;
-
 public class ProfileMatcher {
   public static Boolean hasWhitespace(String text)  {
     Pattern whitespacePattern = Pattern.compile("\\s");
@@ -27,14 +25,4 @@ public class ProfileMatcher {
     Matcher usernameMatcher = nonAlphanumericPattern.matcher(text);
     return usernameMatcher.find();
   }
-
-  public static Boolean userExists(String login, IUserDB db) {
-    for (User user : db.getAllUsers()) {
-      if (user.login.equals(login)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
 }

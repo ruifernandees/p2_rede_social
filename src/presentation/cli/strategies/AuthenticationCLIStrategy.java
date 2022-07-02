@@ -3,9 +3,12 @@ package presentation.cli.strategies;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import domain.dtos.CreateUserDTO;
 import domain.exceptions.LoginException;
+import domain.exceptions.SignUpException;
 import domain.repositories.implementations.MemoryUsersRepository;
 import domain.usecases.LoginUseCase;
+import domain.usecases.SignUpUseCase;
 import presentation.cli.CLIConstants;
 import presentation.cli.ICLIStrategy;
 
@@ -58,9 +61,19 @@ public class AuthenticationCLIStrategy implements ICLIStrategy {
     }
 
     private void signup() {
-        // try {
-        // } catch (SignUpException e) {
-        //     System.out.println(e.getMessage());
-        // }
+        System.out.print("Informe o nome de usuário: ");
+        reader.nextLine();
+        String username = reader.nextLine();
+        System.out.print("Informe o login: ");
+        String login = reader.nextLine();
+        System.out.print("Informe a senha: ");
+        String password = reader.nextLine();
+        SignUpUseCase signUpUseCase = new SignUpUseCase(new MemoryUsersRepository());
+        try {
+            signUpUseCase.execute(new CreateUserDTO(username, login, password));
+            System.out.println("Conta criada com sucesso! Faça login.");
+        } catch (SignUpException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }

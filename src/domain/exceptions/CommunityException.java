@@ -1,4 +1,4 @@
-package presentation.exceptions;
+package domain.exceptions;
 public class CommunityException extends Exception {
   public CommunityException(String message) {
     super("Erro de comunidade: " + message);
