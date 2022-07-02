@@ -1,8 +1,14 @@
 package presentation.cli.strategies;
 
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 
+import domain.entities.Community;
+import domain.entities.User;
+import domain.repositories.implementations.MemoryCommunitiesRepository;
 import domain.repositories.implementations.MemoryUsersRepository;
+import domain.singletons.AuthenticationProvider;
+import domain.usecases.GetUserCommunitiesUseCase;
 import domain.usecases.UpdateUserFeedMessageVisibleOption;
 import domain.usecases.UpdateUserLoginUseCase;
 import domain.usecases.UpdateUserNameUseCase;
@@ -45,9 +51,9 @@ public class AppCLIStrategy extends CLIStrategy {
             case 1:
                 this.editProfile();
                 return CLIConstants.RUN_CLI;
-            // case 2:
-            //     this.viewProfile();
-            //     return CLIConstants.RUN_CLI;
+            case 2:
+                this.viewProfile();
+                return CLIConstants.RUN_CLI;
             // case 3:
             //     this.showFeed();
             //     return CLIConstants.RUN_CLI;
@@ -132,6 +138,22 @@ public class AppCLIStrategy extends CLIStrategy {
             System.out.println("Opção inválida!");
         }
         System.out.println("Dados atualizados com sucesso!");
+    }
+
+    public void viewProfile() {
+        AuthenticationProvider authenticationProvider = AuthenticationProvider.getInstance();
+        User currentUser = authenticationProvider.getCurrentUser();
+        System.out.println("\n" + currentUser + "\n");
+        System.out.println("==== SUAS COMUNIDADES ====");
+        GetUserCommunitiesUseCase getUserCommunitiesUseCase = new GetUserCommunitiesUseCase(
+            new MemoryCommunitiesRepository()
+        );
+        ArrayList<Community> communities = getUserCommunitiesUseCase.execute(currentUser.username);
+        for (Community community : communities) {
+            System.out.println(community.name);
+            System.out.println("  => " + community.description); 
+        }
+        System.out.println();
     }
 
 }
