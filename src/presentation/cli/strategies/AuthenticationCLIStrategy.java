@@ -24,6 +24,7 @@ public class AuthenticationCLIStrategy extends CLIStrategy {
             option = this.reader.nextInt();
         } catch (InputMismatchException e) {
             System.out.println("Opção inválida!");
+            this.reader.nextLine();
             return CLIConstants.RUN_CLI;
         }
         switch (option) {
@@ -36,7 +37,9 @@ public class AuthenticationCLIStrategy extends CLIStrategy {
             case 101:
                 return CLIConstants.CLOSE_CLI;
             default:
-                return CLIConstants.RUN_CLI; 
+                System.out.println("Opção inválida!");
+                this.reader.nextLine();
+                return CLIConstants.RUN_CLI;
         }
     }
 }

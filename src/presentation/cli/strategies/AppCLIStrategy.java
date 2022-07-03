@@ -45,6 +45,7 @@ public class AppCLIStrategy extends CLIStrategy {
             option = this.reader.nextInt();
         } catch (InputMismatchException e) {
             System.out.println("Opção inválida!");
+            this.reader.nextLine();
             return CLIConstants.RUN_CLI;
         }
         switch (option) {
@@ -97,6 +98,7 @@ public class AppCLIStrategy extends CLIStrategy {
             //     return CLIConstants.RUN_CLI;
             default:
                 System.out.println("Opção inválida!");
+                this.reader.nextLine();
                 return CLIConstants.RUN_CLI;
         } 
     }
