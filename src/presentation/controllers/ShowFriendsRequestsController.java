@@ -38,7 +38,8 @@ public class ShowFriendsRequestsController {
             } else if (response.equals("N")) {
                 System.out.println(currentUser.username + " não adicionado!");
             } else {
-                throw new IllegalArgumentException("Resposta inválida!");
+                System.out.println("Resposta inválida!");
+                return;
             }
         }
         currentLoggedUser = authenticationProvider.getCurrentUser();

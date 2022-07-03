@@ -23,7 +23,8 @@ public class SendMessageToInboxController {
         );
         FindByUsernameDTO userDTO = findUserByUsernameUseCase.execute(to);
         if (userDTO == null) {
-            throw new IllegalArgumentException("Erro! Usuário não existe!");
+            System.out.println("Erro! Usuário não existe!");
+            return;
         }
         System.out.print("=> Conteúdo: ");
         String content = reader.nextLine();
