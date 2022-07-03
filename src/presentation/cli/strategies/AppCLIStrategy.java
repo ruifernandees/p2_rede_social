@@ -10,6 +10,7 @@ import presentation.controllers.SendFriendRequestController;
 import presentation.controllers.SendMessageToFeedController;
 import presentation.controllers.ShowAllUsersController;
 import presentation.controllers.ShowFeedController;
+import presentation.controllers.ShowFriendsRequestsController;
 import presentation.controllers.ViewProfileController;
 
 public class AppCLIStrategy extends CLIStrategy {
@@ -45,16 +46,16 @@ public class AppCLIStrategy extends CLIStrategy {
         }
         switch (option) {
             case 1:
-                EditProfileController.execute(reader);
+                EditProfileController.execute(this.reader);
                 return CLIConstants.RUN_CLI;
             case 2:
-                ViewProfileController.execute(reader);
+                ViewProfileController.execute(this.reader);
                 return CLIConstants.RUN_CLI;
             case 3:
                 ShowFeedController.execute();
                 return CLIConstants.RUN_CLI;
             case 4:
-                SendMessageToFeedController.execute(reader);
+                SendMessageToFeedController.execute(this.reader);
                 return CLIConstants.RUN_CLI;
             case 5:
                 ShowAllUsersController.execute();
@@ -62,9 +63,9 @@ public class AppCLIStrategy extends CLIStrategy {
             case 6:
                 SendFriendRequestController.execute();
                 return CLIConstants.RUN_CLI;
-            // case 7:
-            //     this.showFriendsRequests();
-            //     return CLIConstants.RUN_CLI;
+            case 7:
+                ShowFriendsRequestsController.execute(this.reader);
+                return CLIConstants.RUN_CLI;
             // case 8:
             //     this.showFriends();
             //     return CLIConstants.RUN_CLI;

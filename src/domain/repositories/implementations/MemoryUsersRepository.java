@@ -43,5 +43,11 @@ public class MemoryUsersRepository implements IUsersRepository {
         this.connection.getMemoryDatabase().users.set(userDTO.userIndex, user);
     }
 
+    @Override
+    public User findByIndex(Integer index) {
+        ArrayList<User> users = this.connection.getMemoryDatabase().users;
+        return users.get(index);
+    }
+
     
 }
