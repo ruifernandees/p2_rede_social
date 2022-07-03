@@ -1,32 +1,16 @@
 package presentation.cli.strategies;
 
-import java.util.ArrayList;
 import java.util.InputMismatchException;
 
-import domain.dtos.GetPossibleUsersToSendRequestByUserLoginDTO;
-import domain.dtos.SendFriendRequestToAUserUseCaseDTO;
-import domain.dtos.ShowFeedDTO;
-import domain.entities.Community;
-import domain.entities.FeedContent;
-import domain.entities.Message;
-import domain.entities.User;
-import domain.repositories.implementations.MemoryCommunitiesRepository;
-import domain.repositories.implementations.MemoryMessagesRepository;
-import domain.repositories.implementations.MemoryUsersRepository;
-import domain.singletons.AuthenticationProvider;
-import domain.usecases.FindAllUsersUseCase;
-import domain.usecases.GetPossibleUsersToSendRequestByUserLogin;
-import domain.usecases.GetUserCommunitiesUseCase;
-import domain.usecases.SendFriendRequestToAUserUseCase;
-import domain.usecases.SendMessageToFeedUseCase;
-import domain.usecases.ShowFeedUseCase;
-import domain.usecases.UpdateUserFeedMessageVisibleOption;
-import domain.usecases.UpdateUserLoggedStatusUseCase;
-import domain.usecases.UpdateUserLoginUseCase;
-import domain.usecases.UpdateUserNameUseCase;
-import domain.usecases.UpdateUserPasswordUseCase;
 import presentation.cli.CLIConstants;
 import presentation.cli.CLIStrategy;
+import presentation.controllers.EditProfileController;
+import presentation.controllers.LogoutController;
+import presentation.controllers.SendFriendRequestController;
+import presentation.controllers.SendMessageToFeedController;
+import presentation.controllers.ShowAllUsersController;
+import presentation.controllers.ShowFeedController;
+import presentation.controllers.ViewProfileController;
 
 public class AppCLIStrategy extends CLIStrategy {
     public AppCLIStrategy() {
@@ -61,22 +45,22 @@ public class AppCLIStrategy extends CLIStrategy {
         }
         switch (option) {
             case 1:
-                this.editProfile();
+                EditProfileController.execute(reader);
                 return CLIConstants.RUN_CLI;
             case 2:
-                this.viewProfile();
+                ViewProfileController.execute(reader);
                 return CLIConstants.RUN_CLI;
             case 3:
-                this.showFeed();
+                ShowFeedController.execute();
                 return CLIConstants.RUN_CLI;
             case 4:
-                this.sendMessageToFeed();
+                SendMessageToFeedController.execute(reader);
                 return CLIConstants.RUN_CLI;
             case 5:
-                this.showAllUsers();
+                ShowAllUsersController.execute();
                 return CLIConstants.RUN_CLI;
             case 6:
-                this.sendFriendRequest();
+                SendFriendRequestController.execute();
                 return CLIConstants.RUN_CLI;
             // case 7:
             //     this.showFriendsRequests();
@@ -100,7 +84,7 @@ public class AppCLIStrategy extends CLIStrategy {
             //     this.createCommunity();
             //     return CLIConstants.RUN_CLI;
             case 100:
-                this.logout();
+                LogoutController.execute();
                 return CLIConstants.RUN_CLI;
             case 101:
                 return CLIConstants.CLOSE_CLI;
@@ -113,134 +97,4 @@ public class AppCLIStrategy extends CLIStrategy {
         } 
     }
 
-    private void editProfile() {
-        System.out.println("Edição perfil:");
-        System.out.println("Novo nome [digite \"N\" caso queira manter o mesmo]");
-        this.reader.nextLine();
-        String newName = this.reader.nextLine();
-        MemoryUsersRepository usersRepository = new MemoryUsersRepository();
-        try {
-            if (!newName.equals("N")) {
-                UpdateUserNameUseCase updateUserNameUseCase = new UpdateUserNameUseCase(usersRepository);
-                updateUserNameUseCase.execute(newName);
-            }
-            System.out.println("Novo login [digite \"N\" caso queira manter o mesmo]");
-            String newLogin = this.reader.nextLine();
-            if (!newLogin.equals("N")) {
-                UpdateUserLoginUseCase updateUserLoginUseCase = new UpdateUserLoginUseCase(usersRepository);
-                updateUserLoginUseCase.execute(newLogin);
-            }
-            System.out.println("Nova senha [digite \"N\" caso queira manter a mesma senha]");
-            String newPwd = this.reader.nextLine();
-            if (!newPwd.equals("N")) {
-                UpdateUserPasswordUseCase updateUserPasswordUseCase = new UpdateUserPasswordUseCase(usersRepository);
-                updateUserPasswordUseCase.execute(newPwd);
-            }    
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
-        }
-        System.out.println("Mostrar mensagens do feed apenas para amigos? [S/N]");
-        String result = this.reader.next();
-        UpdateUserFeedMessageVisibleOption updateUserFeedMessageVisibleOption = new UpdateUserFeedMessageVisibleOption(usersRepository);
-        if (result.equals("S")) {
-            updateUserFeedMessageVisibleOption.execute(true);
-        } else if (result.equals("N")) {
-            updateUserFeedMessageVisibleOption.execute(false);
-        } else {
-            System.out.println("Opção inválida!");
-        }
-        System.out.println("Dados atualizados com sucesso!");
-    }
-
-    public void viewProfile() {
-        AuthenticationProvider authenticationProvider = AuthenticationProvider.getInstance();
-        User currentUser = authenticationProvider.getCurrentUser();
-        System.out.println("\n" + currentUser + "\n");
-        System.out.println("==== SUAS COMUNIDADES ====");
-        GetUserCommunitiesUseCase getUserCommunitiesUseCase = new GetUserCommunitiesUseCase(
-            new MemoryCommunitiesRepository()
-        );
-        ArrayList<Community> communities = getUserCommunitiesUseCase.execute(currentUser.username);
-        for (Community community : communities) {
-            System.out.println(community.name);
-            System.out.println("  => " + community.description); 
-        }
-        System.out.println();
-    }
-
-    public void showFeed() {
-        AuthenticationProvider authenticationProvider = AuthenticationProvider.getInstance();
-        ShowFeedUseCase showFeedUseCase = new ShowFeedUseCase(
-            new MemoryUsersRepository(), 
-            new MemoryMessagesRepository() 
-        );
-        User currentUser = authenticationProvider.getCurrentUser();
-        Integer currentUserIndex = authenticationProvider.getCurrentUserIndex();
-        FeedContent restrictedFeed = showFeedUseCase.execute(new ShowFeedDTO(currentUser, currentUserIndex));
-        System.out.println("=== Feed ===");
-        for (Message message : restrictedFeed.messages) {
-            System.out.println(message);
-        }
-    }
-
-    public void sendMessageToFeed() {
-        this.reader.nextLine();
-        AuthenticationProvider authenticationProvider = AuthenticationProvider.getInstance();
-        User currentUser = authenticationProvider.getCurrentUser();
-        System.out.println("Nova mensagem: ");
-        String message = this.reader.nextLine();
-        try {
-            SendMessageToFeedUseCase sendMessageToFeedUseCase = new SendMessageToFeedUseCase(new MemoryMessagesRepository()); 
-            sendMessageToFeedUseCase.execute(message, currentUser.username);
-            System.out.println(message);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        } 
-        
-    }
-
-    public void logout() {
-        AuthenticationProvider authenticationProvider = AuthenticationProvider.getInstance();
-        User currentUser = authenticationProvider.getCurrentUser();
-        System.out.println("Até mais, " + currentUser.username + "!");
-        UpdateUserLoggedStatusUseCase updateUserLoggedStatusUseCase = new UpdateUserLoggedStatusUseCase(new MemoryUsersRepository());
-        updateUserLoggedStatusUseCase.execute(false);
-    }
-
-    public void showAllUsers() {
-        FindAllUsersUseCase findAllUsersUseCase = new FindAllUsersUseCase(new MemoryUsersRepository());
-        ArrayList<User> allUsers = findAllUsersUseCase.execute();
-        for (User user : allUsers) {
-            System.out.println(user); 
-        }
-    }
-
-    public void sendFriendRequest() {
-        MemoryUsersRepository memoryUsersRepository = new MemoryUsersRepository();
-        GetPossibleUsersToSendRequestByUserLogin getPossibleUsersToSendRequestByUserLogin = new GetPossibleUsersToSendRequestByUserLogin(
-            memoryUsersRepository 
-        );
-        ArrayList<GetPossibleUsersToSendRequestByUserLoginDTO> usersRequestingYou = getPossibleUsersToSendRequestByUserLogin.execute();
-        Integer counter = 1;
-        for (GetPossibleUsersToSendRequestByUserLoginDTO currentUserDTO : usersRequestingYou) {
-            User currentUser = currentUserDTO.user;
-            System.out.println(counter + ". " + currentUser.username + ". Adicionar [S/N]");
-            counter++;
-            String response = this.reader.next();
-            if (response.equals("S")) {
-                SendFriendRequestToAUserUseCase sendFriendRequestToAUserUseCase = new SendFriendRequestToAUserUseCase(memoryUsersRepository);
-                try {
-                    sendFriendRequestToAUserUseCase.execute(new SendFriendRequestToAUserUseCaseDTO(currentUser, currentUserDTO.userIndex));
-                    System.out.println("Pedido feito a " + currentUser.username + " com sucesso!");
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
-                }
-            } else if (response.equals("N")) {
-                continue;
-            } else {
-                System.out.println("Resposta inválida!");
-            }
-        }
-
-    }
 }
