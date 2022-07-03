@@ -3,6 +3,7 @@ package domain.repositories.implementations;
 import java.util.ArrayList;
 
 import domain.dtos.FindByLoginDTO;
+import domain.dtos.FindByUsernameDTO;
 import domain.entities.User;
 import domain.repositories.IUsersRepository;
 import infra.singletons.DatabaseConnection;
@@ -27,6 +28,18 @@ public class MemoryUsersRepository implements IUsersRepository {
             User currentUser = users.get(i);
             if (currentUser.login.equals(login)) {
                 return new FindByLoginDTO(currentUser, i);
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public FindByUsernameDTO findByUsername(String username) {
+        ArrayList<User> users = this.connection.getMemoryDatabase().users;
+        for (int i = 0; i < users.size(); i++) {
+            User currentUser = users.get(i);
+            if (currentUser.username.equals(username)) {
+                return new FindByUsernameDTO(currentUser, i);
             }
         }
         return null;
