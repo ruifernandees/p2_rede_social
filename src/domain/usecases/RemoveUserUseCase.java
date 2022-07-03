@@ -1,25 +1,24 @@
 package domain.usecases;
 
-import java.util.ArrayList;
-
-import domain.entities.Community;
 import domain.entities.User;
 import domain.repositories.ICommunitiesRepository;
 import domain.repositories.IMessagesRepository;
 import domain.repositories.IUsersRepository;
 import domain.singletons.AuthenticationProvider;
-import infra.singletons.DatabaseConnection;
 
 public class RemoveUserUseCase {
     private IUsersRepository usersRepository;
     private ICommunitiesRepository communitiesRepository;
+    private IMessagesRepository messagesRepository;
 
     public RemoveUserUseCase(
         IUsersRepository usersRepository,
-        ICommunitiesRepository communitiesRepository
+        ICommunitiesRepository communitiesRepository,
+        IMessagesRepository messagesRepository
     ) {
         this.usersRepository = usersRepository;
         this.communitiesRepository = communitiesRepository;
+        this.messagesRepository = messagesRepository;
     }      
 
     public void execute() {
@@ -37,7 +36,6 @@ public class RemoveUserUseCase {
         this.usersRepository.update(currentLoggedUser);
         authenticationProvider.setCurrentUser(null);
         authenticationProvider.setCurrentUserIndex(-1);
-        // TTT
-        DatabaseConnection.getConnection().getMemoryDatabase().feed.messages.removeIf(message -> message.username.equals(username));
+        this.messagesRepository.removeAllMessagesFromUserByUsername(username);
     }
 }

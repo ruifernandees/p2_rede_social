@@ -23,4 +23,12 @@ public class MemoryMessagesRepository implements IMessagesRepository {
         Message messageObject = new Message(content, sender);
         this.connection.getMemoryDatabase().feed.addMessage(messageObject);
     }
+
+    public void removeAllMessagesFromUserByUsername(String username) {
+        this.connection
+            .getMemoryDatabase()
+            .feed
+            .messages
+            .removeIf(message -> message.username.equals(username));
+    }
 }
