@@ -3,6 +3,8 @@ package presentation.cli.strategies;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 
+import domain.dtos.GetPossibleUsersToSendRequestByUserLoginDTO;
+import domain.dtos.SendFriendRequestToAUserUseCaseDTO;
 import domain.dtos.ShowFeedDTO;
 import domain.entities.Community;
 import domain.entities.FeedContent;
@@ -13,7 +15,9 @@ import domain.repositories.implementations.MemoryMessagesRepository;
 import domain.repositories.implementations.MemoryUsersRepository;
 import domain.singletons.AuthenticationProvider;
 import domain.usecases.FindAllUsersUseCase;
+import domain.usecases.GetPossibleUsersToSendRequestByUserLogin;
 import domain.usecases.GetUserCommunitiesUseCase;
+import domain.usecases.SendFriendRequestToAUserUseCase;
 import domain.usecases.SendMessageToFeedUseCase;
 import domain.usecases.ShowFeedUseCase;
 import domain.usecases.UpdateUserFeedMessageVisibleOption;
@@ -71,9 +75,9 @@ public class AppCLIStrategy extends CLIStrategy {
             case 5:
                 this.showAllUsers();
                 return CLIConstants.RUN_CLI;
-            // case 6:
-            //     this.sendFriendRequest();
-            //     return CLIConstants.RUN_CLI;
+            case 6:
+                this.sendFriendRequest();
+                return CLIConstants.RUN_CLI;
             // case 7:
             //     this.showFriendsRequests();
             //     return CLIConstants.RUN_CLI;
@@ -209,5 +213,34 @@ public class AppCLIStrategy extends CLIStrategy {
         for (User user : allUsers) {
             System.out.println(user); 
         }
+    }
+
+    public void sendFriendRequest() {
+        MemoryUsersRepository memoryUsersRepository = new MemoryUsersRepository();
+        GetPossibleUsersToSendRequestByUserLogin getPossibleUsersToSendRequestByUserLogin = new GetPossibleUsersToSendRequestByUserLogin(
+            memoryUsersRepository 
+        );
+        ArrayList<GetPossibleUsersToSendRequestByUserLoginDTO> usersRequestingYou = getPossibleUsersToSendRequestByUserLogin.execute();
+        Integer counter = 1;
+        for (GetPossibleUsersToSendRequestByUserLoginDTO currentUserDTO : usersRequestingYou) {
+            User currentUser = currentUserDTO.user;
+            System.out.println(counter + ". " + currentUser.username + ". Adicionar [S/N]");
+            counter++;
+            String response = this.reader.next();
+            if (response.equals("S")) {
+                SendFriendRequestToAUserUseCase sendFriendRequestToAUserUseCase = new SendFriendRequestToAUserUseCase(memoryUsersRepository);
+                try {
+                    sendFriendRequestToAUserUseCase.execute(new SendFriendRequestToAUserUseCaseDTO(currentUser, currentUserDTO.userIndex));
+                    System.out.println("Pedido feito a " + currentUser.username + " com sucesso!");
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+            } else if (response.equals("N")) {
+                continue;
+            } else {
+                System.out.println("Resposta inválida!");
+            }
+        }
+
     }
 }
