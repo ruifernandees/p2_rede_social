@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import domain.dtos.FindCommunityByNameDTO;
 import domain.entities.Community;
 import domain.entities.Message;
-import domain.entities.User;
 import domain.repositories.ICommunitiesRepository;
 import infra.singletons.DatabaseConnection;
 
