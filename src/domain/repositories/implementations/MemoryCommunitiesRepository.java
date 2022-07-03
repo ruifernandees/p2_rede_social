@@ -3,6 +3,7 @@ package domain.repositories.implementations;
 import java.util.ArrayList;
 
 import domain.entities.Community;
+import domain.entities.Message;
 import domain.entities.User;
 import domain.repositories.ICommunitiesRepository;
 import infra.singletons.DatabaseConnection;
@@ -54,6 +55,11 @@ public class MemoryCommunitiesRepository implements ICommunitiesRepository {
     @Override
     public ArrayList<Community> findAll() {
         return this.connection.getMemoryDatabase().communities;
+    }
+
+    @Override
+    public void addMessageInCommunity(Message message, Integer communityIndex) {
+        this.findAll().get(communityIndex).content.addMessage(message);        
     }
   
 }

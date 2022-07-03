@@ -11,6 +11,7 @@ import presentation.controllers.SendFriendRequestController;
 import presentation.controllers.SendMessageToFeedController;
 import presentation.controllers.SendMessageToInboxController;
 import presentation.controllers.ShowAllUsersController;
+import presentation.controllers.ShowCommunityController;
 import presentation.controllers.ShowFeedController;
 import presentation.controllers.ShowFriendsRequestsController;
 import presentation.controllers.ShowInboxController;
@@ -81,9 +82,9 @@ public class AppCLIStrategy extends CLIStrategy {
                 SendMessageToInboxController.execute(this.reader);
                 return CLIConstants.RUN_CLI;
             case 11:
-            //     this.showCommunity();
-            //     return CLIConstants.RUN_CLI;
-            // case 12:
+                ShowCommunityController.execute(this.reader);
+                return CLIConstants.RUN_CLI;
+            case 12:
             //     this.enterCommunity();
             //     return CLIConstants.RUN_CLI;
             // case 13:
