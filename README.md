@@ -19,9 +19,9 @@
   - Criar ponto central de conexão com o banco de dados. [Link](https://github.com/ruifernandees/p2_rede_social/tree/design-patterns/src/infra/singletons);
   - Criar provedor de autenticação, que possui informações de usuário logado. [Link](https://github.com/ruifernandees/p2_rede_social/tree/design-patterns/src/domain/singletons);
 - **Removal of Large Class**, separando a responsabilidade de [CLI](https://github.com/ruifernandees/p2_rede_social/tree/design-patterns/src/presentation) em:
-  - AuthenticationCLIStrategy: CLI da área de autenticação;
-  - AppCLIStrategy: CLI da área do app (usuário logado);
-  - Controllers: controladores que fazem parte do módulo de command line interface. Cada controlador tem uma responsabilidade específica. Eles tratam o I/O e fazem chamadas por outras classes de camadas diferentes da aplicação. Por exemplo: LoginController trata a parte de login e chama por LoginUseCase, injetando MemoryUsersRepository;
+  - [AuthenticationCLIStrategy](https://github.com/ruifernandees/p2_rede_social/blob/design-patterns/src/presentation/cli/strategies/AuthenticationCLIStrategy.java): CLI da área de autenticação;
+  - [AppCLIStrategy](https://github.com/ruifernandees/p2_rede_social/blob/design-patterns/src/presentation/cli/strategies/AppCLIStrategy.java): CLI da área do app (usuário logado);
+  - [Controllers](https://github.com/ruifernandees/p2_rede_social/tree/design-patterns/src/presentation/controllers): controladores que fazem parte do módulo de command line interface. Cada controlador tem uma responsabilidade específica. Eles tratam o I/O e fazem chamadas por outras classes de camadas diferentes da aplicação. Por exemplo: LoginController trata a parte de login e chama por LoginUseCase, injetando MemoryUsersRepository;
 - **Removal of Long Methods** - Os métodos de CLI possuíam múltiplas responsabilidades, que foram separadas em:
   - [Strategies](https://github.com/ruifernandees/p2_rede_social/tree/design-patterns/src/presentation/cli/strategies);
   - [Controllers](https://github.com/ruifernandees/p2_rede_social/tree/design-patterns/src/presentation/controllers);
