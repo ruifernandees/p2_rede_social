@@ -44,12 +44,4 @@ public class User {
     public void setLogged(Boolean logged) {
         this.logged = logged;
     }
-
-    public void showInbox() {
-        this.inbox.showAllMessages();
-    }
-
-    public void addMessageToInbox(Message message, String to) {
-        this.inbox.addMessage(message, to);
-    }
 }
