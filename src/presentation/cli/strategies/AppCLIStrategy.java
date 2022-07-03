@@ -6,6 +6,7 @@ import presentation.cli.CLIConstants;
 import presentation.cli.CLIStrategy;
 import presentation.controllers.AccessCommunitiesController;
 import presentation.controllers.EditProfileController;
+import presentation.controllers.JoinCommunityController;
 import presentation.controllers.LogoutController;
 import presentation.controllers.RemoveUserController;
 import presentation.controllers.SendFriendRequestController;
@@ -84,9 +85,9 @@ public class AppCLIStrategy extends CLIStrategy {
             case 11:
                 AccessCommunitiesController.execute(this.reader);
                 return CLIConstants.RUN_CLI;
-            // case 12:
-            //     this.enterCommunity();
-            //     return CLIConstants.RUN_CLI;
+            case 12:
+                JoinCommunityController.execute(this.reader);
+                return CLIConstants.RUN_CLI;
             // case 13:
             //     this.createCommunity();
             //     return CLIConstants.RUN_CLI;

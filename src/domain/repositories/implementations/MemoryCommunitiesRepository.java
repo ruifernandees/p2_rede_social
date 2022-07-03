@@ -29,15 +29,28 @@ public class MemoryCommunitiesRepository implements ICommunitiesRepository {
     }
 
     @Override
-    public void create(User user) {
+    public void create(Community community) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void update(User user) {
-        // TODO Auto-generated method stub
-        
+    public void update(Community community) {
+        Integer index = this.findIndexByName(community.name);
+        this.connection.getMemoryDatabase().communities.set(index, community);
+    }
+
+    @Override
+    public Integer findIndexByName(String name) {
+        ArrayList<Community> allCommunities = this.connection.getMemoryDatabase().communities;
+        Integer counter = 0;
+        for (Community community : allCommunities) {
+            if (community.name.equals(name)) {
+                return counter;
+            }
+            counter++;
+        }
+        return null;
     }
 
     @Override
