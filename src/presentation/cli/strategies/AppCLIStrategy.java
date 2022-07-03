@@ -64,7 +64,7 @@ public class AppCLIStrategy extends CLIStrategy {
                 ShowAllUsersController.execute();
                 return CLIConstants.RUN_CLI;
             case 6:
-                SendFriendRequestController.execute();
+                SendFriendRequestController.execute(this.reader);
                 return CLIConstants.RUN_CLI;
             case 7:
                 ShowFriendsRequestsController.execute(this.reader);
