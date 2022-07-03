@@ -10,7 +10,7 @@ import domain.singletons.AuthenticationProvider;
 import domain.usecases.FindAllCommunitiesUseCase;
 import domain.usecases.SendMessageToCommunityUseCase;
 
-public class ShowCommunityController {
+public class AccessCommunitiesController {
     public static void execute(Scanner reader) {
         System.out.println("==== COMUNIDADES ====");
         MemoryCommunitiesRepository  memoryCommunitiesRepository = new MemoryCommunitiesRepository();
@@ -28,7 +28,7 @@ public class ShowCommunityController {
         Integer number = reader.nextInt() - 1;
         try {
             Community chosenCommunity = allCommunities.get(number);
-            ShowCommunityController.showCommunity(chosenCommunity); 
+            AccessCommunitiesController.showCommunity(chosenCommunity); 
             reader.nextLine();
             System.out.println("Nova mensagem: [N, para sair] ");
             String message = reader.nextLine();
