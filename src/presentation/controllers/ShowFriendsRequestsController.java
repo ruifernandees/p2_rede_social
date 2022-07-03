@@ -41,13 +41,11 @@ public class ShowFriendsRequestsController {
                 throw new IllegalArgumentException("Resposta inválida!");
             }
         }
-        // TTT?
         currentLoggedUser = authenticationProvider.getCurrentUser();
-        for (int j = 0; j < addedUsersIndexes.size(); j++) {
-            currentLoggedUser.requestingYourFriendshipIndexes.remove(0);
+        for (Integer integer : addedUsersIndexes) {
+            currentLoggedUser.requestingYourFriendshipIndexes.remove(integer);
             memoryUsersRepository.update(currentLoggedUser);
         }
-        // END_TTT?
         System.out.println(currentLoggedUser.requestingYourFriendshipIndexes);
     }
 }
