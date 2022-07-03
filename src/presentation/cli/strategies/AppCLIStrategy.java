@@ -5,6 +5,7 @@ import java.util.InputMismatchException;
 import presentation.cli.CLIConstants;
 import presentation.cli.CLIStrategy;
 import presentation.controllers.AccessCommunitiesController;
+import presentation.controllers.CreateCommunityController;
 import presentation.controllers.EditProfileController;
 import presentation.controllers.JoinCommunityController;
 import presentation.controllers.LogoutController;
@@ -88,16 +89,15 @@ public class AppCLIStrategy extends CLIStrategy {
             case 12:
                 JoinCommunityController.execute(this.reader);
                 return CLIConstants.RUN_CLI;
-            // case 13:
-            //     this.createCommunity();
-            //     return CLIConstants.RUN_CLI;
+            case 13:
+                CreateCommunityController.execute(this.reader);
+                return CLIConstants.RUN_CLI;
             case 100:
                 LogoutController.execute();
                 return CLIConstants.RUN_CLI;
             case 101:
                 return CLIConstants.CLOSE_CLI;
             case 102:
-                // TEST
                 RemoveUserController.execute();
                 return CLIConstants.RUN_CLI;
             default:

@@ -2,6 +2,7 @@ package domain.repositories.implementations;
 
 import java.util.ArrayList;
 
+import domain.dtos.FindCommunityByNameDTO;
 import domain.entities.Community;
 import domain.entities.Message;
 import domain.entities.User;
@@ -30,23 +31,23 @@ public class MemoryCommunitiesRepository implements ICommunitiesRepository {
 
     @Override
     public void create(Community community) {
-        // TODO Auto-generated method stub
-        
+        this.connection.getMemoryDatabase().communities.add(community);
     }
 
     @Override
     public void update(Community community) {
-        Integer index = this.findIndexByName(community.name);
+        FindCommunityByNameDTO communityByNameDTO = this.findByName(community.name);
+        Integer index = communityByNameDTO.communityIndex;
         this.connection.getMemoryDatabase().communities.set(index, community);
     }
 
     @Override
-    public Integer findIndexByName(String name) {
+    public FindCommunityByNameDTO findByName(String name) {
         ArrayList<Community> allCommunities = this.connection.getMemoryDatabase().communities;
         Integer counter = 0;
         for (Community community : allCommunities) {
             if (community.name.equals(name)) {
-                return counter;
+                return new FindCommunityByNameDTO(community, counter);
             }
             counter++;
         }
