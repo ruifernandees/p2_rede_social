@@ -6,6 +6,7 @@ import presentation.cli.CLIConstants;
 import presentation.cli.CLIStrategy;
 import presentation.controllers.EditProfileController;
 import presentation.controllers.LogoutController;
+import presentation.controllers.RemoveUserController;
 import presentation.controllers.SendFriendRequestController;
 import presentation.controllers.SendMessageToFeedController;
 import presentation.controllers.SendMessageToInboxController;
@@ -93,9 +94,10 @@ public class AppCLIStrategy extends CLIStrategy {
                 return CLIConstants.RUN_CLI;
             case 101:
                 return CLIConstants.CLOSE_CLI;
-            // case 102:
-            //     this.removeUserInterface();
-            //     return CLIConstants.RUN_CLI;
+            case 102:
+                // TEST
+                RemoveUserController.execute();
+                return CLIConstants.RUN_CLI;
             default:
                 System.out.println("Opção inválida!");
                 this.reader.nextLine();

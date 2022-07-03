@@ -38,5 +38,22 @@ public class MemoryCommunitiesRepository implements ICommunitiesRepository {
         // TODO Auto-generated method stub
         
     }
+
+    @Override
+    public void removeUserAndCommunities(String username) {
+        ArrayList<Community> allCommunities = this.connection.getMemoryDatabase().communities; 
+        for (Community community : allCommunities) {
+            community.users.removeIf(user -> user.equals(username));
+            if (community.ownerUsername.equals(username)) {
+                allCommunities.remove(community);
+            }
+        }
+        this.connection.getMemoryDatabase().communities = allCommunities;
+    }
+
+    @Override
+    public ArrayList<Community> findAll() {
+        return this.connection.getMemoryDatabase().communities;
+    }
   
 }
