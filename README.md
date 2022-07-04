@@ -1,5 +1,13 @@
 # Refatoração do Projeto - Aplicação de Design Patterns
-- Explicarei a refatoração em dois tópicos: Arquitetura e Design Patterns aplicados.
+- Explicarei a refatoração em três tópicos: Code Smells, Arquitetura e Design Patterns aplicados.
+
+## Code smells (Código antes da refatoração)
+- CLI possui várias responsabilidades e métodos que não fazem parte do escopo dela, que seria apenas fazer uma interface entre o usuário e a aplicação (Large class);
+- CLI possui muitas referências a atributos e métodos de outros objetos (Feature envy);
+- A maioria dos métodos de CLI possuem função tanto de fazer I/O quanto de lidar com regras de negócio (long methods);
+- Método userExists em ProfileMatcher possui muitas referências a dados de outro objeto - db (Feature envy);
+- A classe User possui métodos que são responsabilidades da classe Inbox e fazem referências a seus dados(Feature envy).
+
 ## Arquitetura pós-refatoração
 - [Domain](https://github.com/ruifernandees/p2_rede_social/tree/design-patterns/src/domain): camada que possui os componentes relacionados a regras de negócio específicas da aplicação;
     - DTOs: objetos de transferência de dados - servem para transitar dados entre camadas;
