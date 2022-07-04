@@ -2,6 +2,7 @@
 - Explicarei a refatoração em três tópicos: Code Smells, Arquitetura e Design Patterns aplicados.
 
 ## Code smells (Código antes da refatoração)
+- Link do código antigo: https://github.com/ruifernandees/p2_rede_social/tree/code-smells
 - CLI possui várias responsabilidades e métodos que não fazem parte do escopo dela, que seria apenas fazer uma interface entre o usuário e a aplicação (Large class);
 - CLI possui muitas referências a atributos e métodos de outros objetos (Feature envy);
 - A maioria dos métodos de CLI possuem função tanto de fazer I/O quanto de lidar com regras de negócio (long methods);
